@@ -324,8 +324,8 @@ def bdt_taumass_plot(config, categories, year):
             hs_bkg.Add(hTrain_bkg[j])
             if range_ == "tripletMass>0":
                 range_ = "full"
-            range_ = range_.ReplaceAll("tripletMass", "m(3#mu)")
-            range_ = range_.ReplaceAll("-1.777", "-m(#tau)")
+            range_ = range_.replace("tripletMass", "m(3#mu)")
+            range_ = range_.replace("-1.777", "-m(#tau)")
             leg_bkg.AddEntry(hTrain_bkg[j], range_, "l")
 
         hs_bkg.Draw("hist nostack")
