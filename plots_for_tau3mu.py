@@ -326,7 +326,6 @@ def bdt_taumass_plot(config, categories, year):
             hTrain_bkg[j].SetTitle(year + " Data SB - cat " + category)
             hTrain_bkg[j].SetLineColor(1 + j)
             hTrain_bkg[j].SetLineWidth(2)
-            print("Entries ", hTrain_bkg[j].GetEntries())
             hTrain_bkg[j].Scale(1 / hTrain_bkg[j].GetEntries())
             hs_bkg.Add(hTrain_bkg[j])
             if range_ == "tripletMass>0":
@@ -336,6 +335,8 @@ def bdt_taumass_plot(config, categories, year):
             leg_bkg.AddEntry(hTrain_bkg[j], range_, "l")
 
         hs_bkg.Draw("hist nostack")
+        max_value_y = hs_bkg.GetMaximum()
+        hs_bkg.GetYaxis().SetRangeUser(0, 1.5 * max_value_y)
         t2 = ROOT.TPaveText(0.1, 0.9, 0.3, 1.0, year + " Data SB - cat " + category)
         t2.Draw()
         leg_bkg.Draw()
