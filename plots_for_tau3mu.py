@@ -43,8 +43,8 @@ def bdt_KS_plot(config, fold_index, categories, year):
     binning = "(25, 0.0, 1.0)"
     varname = "fold_" + str(fold_index) +"_"
 
-    train_sel = "int(+"index_branch"+)%" + kfold_s + "!=0"
-    test_sel = "int(+"index_branch"+)%" + kfold_s + "==0"
+    train_sel = "int("+index_branch+")%" + kfold_s + "!=0"
+    test_sel = "int("+index_branch+")%" + kfold_s + "==0"
 
     sig_sel = Y_column+"!=0"
     bkg_sel = Y_column+"==0"
