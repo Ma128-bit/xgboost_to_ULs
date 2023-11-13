@@ -243,7 +243,7 @@ def bdt_taumass_plot(config, categories, year):
         if i == 2:
             phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
-        omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
+        omega_veto = "(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))"
 
         isSB = ""
         if i == 0:
@@ -280,6 +280,7 @@ def bdt_taumass_plot(config, categories, year):
             leg_signal.AddEntry(hTrain_signal[j], range_, "l")
 
         hs_signal.Draw("hist nostack")
+        """
         t1 = ROOT.TPaveText(0.1, 0.9, 0.3, 1.0, year + " Signal - cat " + category)
         t1.Draw()
         leg_signal.Draw()
@@ -356,6 +357,7 @@ def bdt_taumass_plot(config, categories, year):
 
         c2ratio.Update()
         c2ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg_ratio.png")
+        """
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
