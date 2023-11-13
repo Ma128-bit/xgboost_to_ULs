@@ -168,7 +168,7 @@ def to_string_with_precision(a_value, n=6):
     return f"{a_value:.{n}f}"
 
 
-def bdt_taumass_plot(config, inputfile, year):
+def bdt_taumass_plot(config, categories, year):
     with open(config, 'r') as file:
         json_file = json.load(file)
     kfold = json_file['number_of_splits']
@@ -371,5 +371,5 @@ if __name__ == "__main__":
     
     bdt_KS_plot(config, fold_index, categories, "")
 
-    bdt_taumass_plot("your_input_file.root", "2018")
+    bdt_taumass_plot(config, categories, "")
 
