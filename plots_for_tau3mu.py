@@ -311,9 +311,9 @@ def bdt_taumass_plot(config, categories, year):
                 hratio[j].Draw("lepSame")
 
         c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal_ratio.png")
-       
-        """
 
+
+        c2 = ROOT.TCanvas("c2", year + " data SB " + category, 150, 10, 800, 800)
         hs_bkg = ROOT.THStack("hs_bkg", year + " data SB " + category)
         leg_bkg = ROOT.TLegend(0.20, 0.65, 0.80, 0.9)
 
@@ -326,7 +326,8 @@ def bdt_taumass_plot(config, categories, year):
             hTrain_bkg[j].SetTitle(year + " Data SB - cat " + category)
             hTrain_bkg[j].SetLineColor(1 + j)
             hTrain_bkg[j].SetLineWidth(2)
-            hTrain_bkg[j].Scale(1 / hTrain_bkg[j].GetEntries())
+            print("Entries ", hTrain_bkg[j].GetEntries())
+            #hTrain_bkg[j].Scale(1 / hTrain_bkg[j].GetEntries())
             hs_bkg.Add(hTrain_bkg[j])
             if range_ == "tripletMass>0":
                 range_ = "full"
@@ -341,7 +342,6 @@ def bdt_taumass_plot(config, categories, year):
         hs_bkg.GetXaxis().SetTitle("BDT score")
 
         ROOT.gPad.Modified()
-        c2 = ROOT.TCanvas("c2", year + " data SB " + category, 150, 10, 800, 800)
         c2.SetLogy()
         c2.Update()
         c2.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg.png")
