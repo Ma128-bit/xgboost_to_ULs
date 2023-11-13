@@ -88,18 +88,18 @@ def bdt_KS_plot(config, fold_index, categories, year):
         h_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg")
         t.Draw(varname + ">>hTest_bkg" + binning, bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ+ "&&" + omega_veto)
         h_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg")
-        t.Draw(varname + ">>hTrain_sig" + binning, weight+"*(" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTrain_sig" + binning, ht+"*(" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig")
-        t.Draw(varname + ">>hTest_sig" + binning, weight+"*(" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTest_sig" + binning, ht+"*(" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig")
 
         t.Draw(varname + ">>hTrain_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg2")
         t.Draw(varname + ">>hTest_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg2")
-        t.Draw(varname + ">>hTrain_sig2" + binning, weight+"*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTrain_sig2" + binning, ht+"*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig2")
-        t.Draw(varname + ">>hTest_sig2" + binning, weight+"*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTest_sig2" + binning, ht+"*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig2")
 
         print(categ)
@@ -188,7 +188,7 @@ def bdt_taumass_plot(config, inputfile, year):
     print("Opened input file:", file_name)
 
 
-    outputdir = pos_dir_xgboost + output_path +"/" + date+ "/" + "KS_plots"
+    outputdir = pos_dir_xgboost + output_path +"/" + date+ "/" + "Mass_plots"
     
     if not os.path.exists(outputdir):
         subprocess.call("mkdir -p %s" % outputdir, shell=True)
@@ -243,6 +243,8 @@ def bdt_taumass_plot(config, inputfile, year):
         if i == 2:
             phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
+        omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
+
         isSB = ""
         if i == 0:
             isSB = "((tripletMass<=1.753 && tripletMass>=1.62) || (tripletMass<=2.0 && tripletMass>=1.801))"
@@ -264,7 +266,7 @@ def bdt_taumass_plot(config, inputfile, year):
             range_ = bdt_range_signal[j]
             s = str(j)
             print("bdt range", range_)
-            t.Draw(f"{varname}>>hTrain_signal{s}{binning}", f"weight*({sig_sel}&&{bdt_range_signal[j]}&&{phiveto}&&{categ})")
+            t.Draw(f"{varname}>>hTrain_signal{s}{binning}", f"{weight}*({sig_sel}&&{bdt_range_signal[j]}&&{phiveto}&&{categ}&&{omega_veto})")
             hTrain_signal.append(ROOT.gDirectory.Get(f"hTrain_signal{s}"))
             hTrain_signal[j].SetTitle(year + " Signal - cat " + category)
             hTrain_signal[j].SetLineColor(1 + j)
@@ -313,7 +315,7 @@ def bdt_taumass_plot(config, inputfile, year):
             range_ = bdt_range_bkg[j]
             s = str(j)
             print("bdt range", range_)
-            t.Draw(f"{varname}>>hTrain_bkg{s}{binning}", f"{bkg_sel}&&{isSB}&&{bdt_range_bkg[j]}&&{phiveto}&&{categ}")
+            t.Draw(f"{varname}>>hTrain_bkg{s}{binning}", f"{bkg_sel}&&{isSB}&&{bdt_range_bkg[j]}&&{phiveto}&&{categ}&&{omega_veto}")
             hTrain_bkg.append(ROOT.gDirectory.Get(f"hTrain_bkg{s}"))
             hTrain_bkg[j].SetTitle(year + " Data SB - cat " + category)
             hTrain_bkg[j].SetLineColor(1 + j)
@@ -353,7 +355,7 @@ def bdt_taumass_plot(config, inputfile, year):
                 hratio.Draw("same lep")
 
         c2ratio.Update()
-        c2ratio.SaveAs(outputfile + "_" + category + "_" + varname + "correlation_bkg_ratio.png")
+        c2ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg_ratio.png")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
