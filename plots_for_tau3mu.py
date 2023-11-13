@@ -207,14 +207,14 @@ def bdt_taumass_plot(config, categories, year):
 
     proba = [k / 5.0 for k in range(5)]
     ncut = 5
-    edges = ROOT.std.vector('double')(ncut)
+    edges = np.zeros(ncut, dtype=float)
     
     h_mc = ROOT.TH1F("h_mc", "", 200, 0, 0.2)
     t.Draw("abs(tripletMass-1.777)>>h_mc", sig_sel)
     h_mc = ROOT.gDirectory.Get("h_mc")
     for k in range(5):
         proba[k] = k / 5.0
-    h_mc.GetQuantiles(ncut, edges.data(), proba)
+    h_mc.GetQuantiles(ncut, edges, proba)
 
     bdt_range_signal = [f"abs(tripletMass-1.777)>{to_string_with_precision(edges[i], 3)} && abs(tripletMass-1.777)<={to_string_with_precision(edges[i+1], 3)}" for i in range(ncut-1)]
 
