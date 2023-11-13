@@ -289,7 +289,7 @@ def bdt_taumass_plot(config, categories, year):
         c1 = ROOT.TCanvas("c1", year + " " + signal_label_all + " " + category, 150, 10, 800, 800)
         c1.SetLogy()
         c1.Update()
-        c1.SaveAs(outputfile + "_" + category + "_" + varname + "correlation_signal.png")
+        c1.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal.png")
 
         c1ratio = ROOT.TCanvas("c1ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
@@ -306,7 +306,7 @@ def bdt_taumass_plot(config, categories, year):
                 hratio.Draw("same lep")
 
         c1ratio.Update()
-        c1ratio.SaveAs(outputfile + "_" + category + "_" + varname + "correlation_signal_ratio.png")
+        c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal_ratio.png")
 
         hs_bkg = ROOT.THStack("hs_bkg", year + " data SB " + category)
         leg_bkg = ROOT.TLegend(0.20, 0.65, 0.80, 0.9)
@@ -338,7 +338,7 @@ def bdt_taumass_plot(config, categories, year):
         c2 = ROOT.TCanvas("c2", year + " data SB " + category, 150, 10, 800, 800)
         c2.SetLogy()
         c2.Update()
-        c2.SaveAs(outputfile + "_" + category + "_" + varname + "correlation_bkg.png")
+        c2.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg.png")
 
         c2ratio = ROOT.TCanvas("c2ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
