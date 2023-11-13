@@ -231,6 +231,7 @@ def bdt_taumass_plot(config, categories, year):
     n_signal = len(bdt_range_signal)
     n_bkg = len(bdt_range_bkg)
 
+    #for i in range(3):
     for i in range(3):
         hTrain_signal = []
         hTrain_bkg = []
@@ -280,7 +281,7 @@ def bdt_taumass_plot(config, categories, year):
             leg_signal.AddEntry(hTrain_signal[j], range_, "l")
 
         hs_signal.Draw("hist nostack")
-        """
+        
         t1 = ROOT.TPaveText(0.1, 0.9, 0.3, 1.0, year + " Signal - cat " + category)
         t1.Draw()
         leg_signal.Draw()
@@ -291,7 +292,7 @@ def bdt_taumass_plot(config, categories, year):
         c1.SetLogy()
         c1.Update()
         c1.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal.png")
-
+        """
         c1ratio = ROOT.TCanvas("c1ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
         ROOT.gStyle.SetOptStat(0)
