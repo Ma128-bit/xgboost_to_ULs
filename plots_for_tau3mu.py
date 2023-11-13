@@ -336,7 +336,8 @@ def bdt_taumass_plot(config, categories, year):
 
         hs_bkg.Draw("hist nostack")
         max_value_y = hs_bkg.GetMaximum()
-        hs_bkg.GetYaxis().SetRangeUser(1, 100 * max_value_y)
+        hs_bkg.GetHistogram().GetYaxis().SetRangeUser(1, 100 * max_value_y)
+        #hs_bkg.GetYaxis().SetRangeUser(1, 100 * max_value_y)
         hs_bkg.Draw("hist nostack")
         t2 = ROOT.TPaveText(0.1, 0.9, 0.3, 1.0, year + " Data SB - cat " + category)
         t2.Draw()
