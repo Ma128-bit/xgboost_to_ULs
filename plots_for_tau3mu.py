@@ -205,8 +205,8 @@ def bdt_taumass_plot(config, categories, year):
     else:
         return -1
 
-    proba = np.array(ncut, dtype=float)
     ncut = 5
+    proba = np.array(ncut, dtype=float)
     edges = np.zeros(ncut, dtype=float)
     
     h_mc = ROOT.TH1F("h_mc", "", 200, 0, 0.2)
