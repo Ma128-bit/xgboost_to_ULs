@@ -185,5 +185,5 @@ if __name__ == "__main__":
     categories = args.categories
     fold_index = args.index
     
-    bdt_KS_plot(config, fold_index, categories, "your_year")
+    bdt_KS_plot(config, fold_index, categories, "")
 
