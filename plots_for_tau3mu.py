@@ -2,16 +2,6 @@ import sys, os, subprocess, json
 from datetime import datetime
 import numpy as np
 import pandas as pd
-import uproot
-import pickle
-import xgboost as xgb
-from sklearn.metrics import roc_curve, roc_auc_score
-from pprint import pprint
-import matplotlib as mpl
-# https://matplotlib.org/faq/usage_faq.html
-mpl.use('Agg')
-import matplotlib.pyplot as plt
-import random
 import ROOT
 import argparse
 from ROOT import *
@@ -28,6 +18,7 @@ def bdt_KS_plot(config, fold_index, categories, year):
     index_branch = json_file['index_branch']
     Y_column = json_file['Y_column']
     pos_dir_xgboost = json_file['data_path']
+    weight = json_file['weight_column']
     
     kfold_s = str(kfold)
     file_name = pos_dir_xgboost + output_path +"/" + date+ "/" + inputfile +"_minitree.root"
@@ -97,18 +88,18 @@ def bdt_KS_plot(config, fold_index, categories, year):
         h_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg")
         t.Draw(varname + ">>hTest_bkg" + binning, bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ+ "&&" + omega_veto)
         h_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg")
-        t.Draw(varname + ">>hTrain_sig" + binning, "weight*(" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTrain_sig" + binning, weight+"*(" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig")
-        t.Draw(varname + ">>hTest_sig" + binning, "weight*(" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTest_sig" + binning, weight+"*(" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig")
 
         t.Draw(varname + ">>hTrain_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg2")
         t.Draw(varname + ">>hTest_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg2")
-        t.Draw(varname + ">>hTrain_sig2" + binning, "weight*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTrain_sig2" + binning, weight+"*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig2")
-        t.Draw(varname + ">>hTest_sig2" + binning, "weight*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTest_sig2" + binning, weight+"*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig2")
 
         print(categ)
