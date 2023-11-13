@@ -205,7 +205,7 @@ def bdt_taumass_plot(config, categories, year):
     else:
         return -1
 
-    proba = [k / 5.0 for k in range(5)]
+    proba = np.array(ncut, dtype=float)
     ncut = 5
     edges = np.zeros(ncut, dtype=float)
     
