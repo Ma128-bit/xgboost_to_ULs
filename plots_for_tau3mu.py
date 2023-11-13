@@ -231,7 +231,7 @@ def bdt_taumass_plot(config, categories, year):
     n_signal = len(bdt_range_signal)
     n_bkg = len(bdt_range_bkg)
 
-    for i in range(1,2):
+    for i in range(3):
         hTrain_signal = []
         hTrain_bkg = []
 
