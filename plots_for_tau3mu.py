@@ -218,7 +218,7 @@ def bdt_taumass_plot(config, categories, year):
 
     bdt_range_signal = [f"abs(tripletMass-1.777)>{to_string_with_precision(edges[i], 3)} && abs(tripletMass-1.777)<={to_string_with_precision(edges[i+1], 3)}" for i in range(ncut-1)]
 
-    h_data = ROOT.TH1F("h_data", "", 200, 0, 0.2)
+    h_data = ROOT.TH1F("h_data", "", 200, 0.024, 0.2)
     t.Draw("abs(tripletMass-1.777)>>h_data", bkg_sel)
     h_data = ROOT.gDirectory.Get("h_data")
     h_data.GetQuantiles(ncut, edges, proba)
