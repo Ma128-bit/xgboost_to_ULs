@@ -35,7 +35,10 @@ def bdt_KS_plot(config, fold_index, categories, year):
     t = f.Get(out_tree_name)
     print("Opened input file:", file_name)
 
-    outputfile = file_name.replace("minitree.root", "")
+    outputdir = pos_dir_xgboost + output_path +"/" + date+ "/" + "KS_plots"
+    
+    if not os.path.exists(outputdir):
+        subprocess.call("mkdir -p %s" % outputdir, shell=True)
 
     binning = "(25, 0.0, 1.0)"
     varname = "fold_" + str(fold_index) +"_"
@@ -168,7 +171,7 @@ def bdt_KS_plot(config, fold_index, categories, year):
         text_KS2.SetNDC(True)
         text_KS2.Draw("same")
 
-        c3.SaveAs(outputfile + "_" + cat_label[i] + "_KS.png")
+        c3.SaveAs(outputdir +"/" + cat_label[i] + "_KS_plot.png")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
