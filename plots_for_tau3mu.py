@@ -334,7 +334,7 @@ def bdt_taumass_plot(config, categories, year):
             range_ = range_.replace("-1.777", "-m(#tau)")
             leg_bkg.AddEntry(hTrain_bkg[j], range_, "l")
 
-        
+        hs_bkg.Draw("hist nostack")
         max_value_y = hs_bkg.GetMaximum()
         hs_bkg.GetYaxis().SetRangeUser(1, 100 * max_value_y)
         hs_bkg.Draw("hist nostack")
