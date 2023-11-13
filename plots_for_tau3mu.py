@@ -225,8 +225,8 @@ def bdt_taumass_plot(config, categories, year):
 
     bdt_range_bkg = [f"abs(tripletMass-1.777)>{to_string_with_precision(edges[i], 3)} && abs(tripletMass-1.777)<={to_string_with_precision(edges[i+1], 3)}" for i in range(ncut-1)]
 
-    bdt_range_bkg[ncut-1] = "tripletMass>0"
-    bdt_range_signal[ncut-1] = "tripletMass>0"
+    bdt_range_bkg.append("tripletMass>0")
+    bdt_range_signal.append("tripletMass>0")
 
     n_signal = len(bdt_range_signal)
     n_bkg = len(bdt_range_bkg)
