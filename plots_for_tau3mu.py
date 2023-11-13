@@ -380,7 +380,7 @@ if __name__ == "__main__":
     categories = args.categories
     fold_index = args.index
     
-    #bdt_KS_plot(config, fold_index, categories, "")
+    bdt_KS_plot(config, fold_index, categories, "")
 
     bdt_taumass_plot(config, categories, "")
 
