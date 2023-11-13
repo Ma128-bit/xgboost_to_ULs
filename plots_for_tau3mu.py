@@ -294,7 +294,7 @@ def bdt_taumass_plot(config, categories, year):
         c1.SetLogy()
         #c1.Update()
         c1.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal.png")
-        """
+
         c1ratio = ROOT.TCanvas("c1ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
         ROOT.gStyle.SetOptStat(0)
@@ -309,8 +309,9 @@ def bdt_taumass_plot(config, categories, year):
             else:
                 hratio.Draw("same lep")
 
-        c1ratio.Update()
         c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal_ratio.png")
+       
+        """
 
         hs_bkg = ROOT.THStack("hs_bkg", year + " data SB " + category)
         leg_bkg = ROOT.TLegend(0.20, 0.65, 0.80, 0.9)
