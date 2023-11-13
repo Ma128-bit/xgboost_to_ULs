@@ -97,9 +97,9 @@ def bdt_KS_plot(config, fold_index, categories, year):
         h2_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg2")
         t.Draw(varname + ">>hTest_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg2")
-        t.Draw(varname + ">>hTrain_sig2" + binning, ht+"*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTrain_sig2" + binning, weight+"*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig2")
-        t.Draw(varname + ">>hTest_sig2" + binning, ht+"*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
+        t.Draw(varname + ">>hTest_sig2" + binning, weight+"*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig2")
 
         print(categ)
