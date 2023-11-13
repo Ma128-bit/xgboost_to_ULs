@@ -345,7 +345,7 @@ def bdt_taumass_plot(config, categories, year):
         c2.SetLogy()
         c2.Update()
         c2.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg.png")
-
+        """
         c2ratio = ROOT.TCanvas("c2ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
         ROOT.gStyle.SetOptStat(0)
