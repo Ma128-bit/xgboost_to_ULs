@@ -298,18 +298,17 @@ def bdt_taumass_plot(config, categories, year):
         c1ratio = ROOT.TCanvas("c1ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
         ROOT.gStyle.SetOptStat(0)
+        hratio = []
         for j in range(n_signal - 1):
-            hratio = hTrain_signal[j].Clone("hratio")
-            hratio.SetLineColor(1 + j)
-            hratio.Divide(hTrain_signal[n_signal - 1])
+            hratio.append(hTrain_signal[j].Clone("hratio"))
+            hratio[j].SetLineColor(1 + j)
+            hratio[j].Divide(hTrain_signal[n_signal - 1])
             if j == 0:
-                hratio.GetXaxis().SetTitle("BDT score")
-                hratio.GetYaxis().SetRangeUser(0.2, 1.8)
-                hratio.Draw("lep")
-                c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + j+ "correlation_signal_ratio.png")
+                hratio[j].GetXaxis().SetTitle("BDT score")
+                hratio[j].GetYaxis().SetRangeUser(0.2, 1.8)
+                hratio[j].Draw("lep")
             else:
-                hratio.Draw("lepSame")
-                c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + j+ "correlation_signal_ratio.png")
+                hratio[j].Draw("lepSame")
 
         c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal_ratio.png")
        
