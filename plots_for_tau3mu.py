@@ -306,8 +306,10 @@ def bdt_taumass_plot(config, categories, year):
                 hratio.GetXaxis().SetTitle("BDT score")
                 hratio.GetYaxis().SetRangeUser(0.2, 1.8)
                 hratio.Draw("lep")
+                c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + j+ "correlation_signal_ratio.png")
             else:
                 hratio.Draw("lepSame")
+                c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + j+ "correlation_signal_ratio.png")
 
         c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal_ratio.png")
        
