@@ -343,24 +343,25 @@ def bdt_taumass_plot(config, categories, year):
 
         ROOT.gPad.Modified()
         c2.SetLogy()
-        c2.Update()
+        #c2.Update()
         c2.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg.png")
-        """
+        
         c2ratio = ROOT.TCanvas("c2ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
         ROOT.gStyle.SetOptStat(0)
+        hratio2 = []
         for j in range(n_bkg - 1):
-            hratio = hTrain_bkg[j].Clone("hratio")
-            hratio.SetLineColor(1 + j)
-            hratio.Divide(hTrain_bkg[n_bkg - 1])
+            hratio2.append(hTrain_bkg[j].Clone("hratio"))
+            hratio2[j].SetLineColor(1 + j)
+            hratio2[j].Divide(hTrain_bkg[n_bkg - 1])
             if (j == 0 and i == 0) or (j == 1 and i > 0):
-                hratio.GetXaxis().SetTitle("BDT score")
-                hratio.GetYaxis().SetRangeUser(0.2, 1.8)
-                hratio.Draw("lep")
+                hratio2[j].GetXaxis().SetTitle("BDT score")
+                hratio2[j].GetYaxis().SetRangeUser(0.2, 1.8)
+                hratio2[j].Draw("lep")
             else:
-                hratio.Draw("same lep")
+                hratio2[j].Draw("same lep")
 
-        c2ratio.Update()
+        #c2ratio.Update()
         c2ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg_ratio.png")
         """
 
