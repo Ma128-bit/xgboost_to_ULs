@@ -327,7 +327,7 @@ def bdt_taumass_plot(config, categories, year):
             hTrain_bkg[j].SetLineColor(1 + j)
             hTrain_bkg[j].SetLineWidth(2)
             print("Entries ", hTrain_bkg[j].GetEntries())
-            #hTrain_bkg[j].Scale(1 / hTrain_bkg[j].GetEntries())
+            hTrain_bkg[j].Scale(1 / hTrain_bkg[j].GetEntries())
             hs_bkg.Add(hTrain_bkg[j])
             if range_ == "tripletMass>0":
                 range_ = "full"
