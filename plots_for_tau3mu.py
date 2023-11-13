@@ -1,29 +1,58 @@
+import sys, os, subprocess, json
+from datetime import datetime
+import numpy as np
+import pandas as pd
+import uproot
+import pickle
+import xgboost as xgb
+from sklearn.metrics import roc_curve, roc_auc_score
+from pprint import pprint
+import matplotlib as mpl
+# https://matplotlib.org/faq/usage_faq.html
+mpl.use('Agg')
+import matplotlib.pyplot as plt
+import random
 import ROOT
+import argparse
+from ROOT import *
 
-def bdt_KS_plot(inputfile, year):
-    kfold = 10
+def bdt_KS_plot(config, fold_index, categories, year):
+    
+    with open(config, 'r') as file:
+        json_file = json.load(file)
+    kfold = json_file['number_of_splits']
+    output_path = json_file['output_path']
+    date = json_file['date']
+    inputfile = json_file['Name']
+    out_tree_name = json_file['out_tree_name']
+    index_branch = json_file['index_branch']
+    Y_column = json_file['Y_column']
+    pos_dir_xgboost = json_file['data_path']
+    
     kfold_s = str(kfold)
-
-    file_name = " /analysis_xgboost_Run3/" + inputfile
+    file_name = pos_dir_xgboost + output_path +"/" + date+ "/" + inputfile +"_minitree.root"
     f = ROOT.TFile(file_name, "READ")
-    t = f.Get("OutputTree")
+    t = f.Get(out_tree_name)
     print("Opened input file:", file_name)
 
-    outputfile = inputfile.replace(".root", "")
+    outputfile = file_name.replace("minitree.root", "")
 
     binning = "(25, 0.0, 1.0)"
-    varname = "bdt_fold1"
+    varname = "fold_" + str(fold_index) +"_"
 
-    train_sel = "int(evt)%" + kfold_s + "!=0"
-    test_sel = "int(evt)%" + kfold_s + "==0"
+    train_sel = "int(+"index_branch"+)%" + kfold_s + "!=0"
+    test_sel = "int(+"index_branch"+)%" + kfold_s + "==0"
 
-    sig_sel = "isMC>0 && isMC<4"
-    bkg_sel = "isMC==0"
+    sig_sel = Y_column+"!=0"
+    bkg_sel = Y_column+"==0"
 
     signal_label_all = "MC #tau#rightarrow3#mu"
-    cat_label = ["categoryA", "categoryB", "categoryC"]
-
-    for i in range(3):
+    if categories is not None:
+        cat_label = categories.split(' ')
+    else:
+        return -1
+    
+    for i in range(len(cat_label)):
         h_BDT_Test_S = ROOT.TH1F()
         h_BDT_Train_S = ROOT.TH1F()
         h_BDT_Test_B = ROOT.TH1F()
@@ -42,6 +71,15 @@ def bdt_KS_plot(inputfile, year):
         elif i == 2:
             phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
+        omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
+        
+        if i == 0:
+            phiveto = "(!(dimu_OS1<1.044 && dimu_OS1>0.994) && !(dimu_OS2<1.044 && dimu_OS2>0.994))"
+        elif i == 1:
+            phiveto = "(!(dimu_OS1<1.053 && dimu_OS1>0.985) && !(dimu_OS2<1.053 && dimu_OS2>0.985))"
+        elif i == 2:
+            phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
+
         isSB = ""
         if i == 0:
             isSB = "((tripletMass<=1.753 && tripletMass>=1.62) || (tripletMass<=2.0 && tripletMass>=1.801))"
@@ -52,22 +90,22 @@ def bdt_KS_plot(inputfile, year):
 
         categ = "category==" + str(i)
 
-        t.Draw(varname + ">>hTrain_bkg" + binning, bkg_sel + "&&" + isSB + "&&" + train_sel + "&&" + phiveto + "&&" + categ)
+        t.Draw(varname + ">>hTrain_bkg" + binning, bkg_sel + "&&" + isSB + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg")
-        t.Draw(varname + ">>hTest_bkg" + binning, bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ)
+        t.Draw(varname + ">>hTest_bkg" + binning, bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ+ "&&" + omega_veto)
         h_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg")
-        t.Draw(varname + ">>hTrain_sig" + binning, "weight*(" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + ")")
+        t.Draw(varname + ">>hTrain_sig" + binning, "weight*(" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig")
-        t.Draw(varname + ">>hTest_sig" + binning, "weight*(" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + ")")
+        t.Draw(varname + ">>hTest_sig" + binning, "weight*(" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig")
 
-        t.Draw(varname + ">>hTrain_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + train_sel + "&&" + phiveto + "&&" + categ)
+        t.Draw(varname + ">>hTrain_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Train_B = ROOT.gDirectory.Get("hTrain_bkg2")
-        t.Draw(varname + ">>hTest_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ)
+        t.Draw(varname + ">>hTest_bkg2" + binning, varname + ">0.6&&" + bkg_sel + "&&" + isSB + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto)
         h2_BDT_Test_B = ROOT.gDirectory.Get("hTest_bkg2")
-        t.Draw(varname + ">>hTrain_sig2" + binning, "weight*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + ")")
+        t.Draw(varname + ">>hTrain_sig2" + binning, "weight*(" + varname + ">0.6&&" + sig_sel + "&&" + train_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Train_S = ROOT.gDirectory.Get("hTrain_sig2")
-        t.Draw(varname + ">>hTest_sig2" + binning, "weight*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + ")")
+        t.Draw(varname + ">>hTest_sig2" + binning, "weight*(" + varname + ">0.6&&" + sig_sel + "&&" + test_sel + "&&" + phiveto + "&&" + categ + "&&" + omega_veto + ")")
         h2_BDT_Test_S = ROOT.gDirectory.Get("hTest_sig2")
 
         print(categ)
@@ -132,5 +170,17 @@ def bdt_KS_plot(inputfile, year):
 
         c3.SaveAs(outputfile + "_" + cat_label[i] + "_KS.png")
 
-bdt_KS_plot("your_input_file.root", "your_year")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument("--config", type=str, help="Path to the copy of the JSON configuration file")
+    parser.add_argument("--categories", type=str, help="List of categories separated by ' ' ")
+    parser.add_argument("--index", type=int, help="Fold index")
+
+    args = parser.parse_args()
+    
+    config = args.config
+    categories = args.categories
+    fold_index = args.index
+    
+    bdt_KS_plot(config, fold_index, categories, "your_year")
 
