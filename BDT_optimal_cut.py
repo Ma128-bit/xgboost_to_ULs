@@ -64,7 +64,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
     signal = f"weight_MC2*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
     bkg = f"weight_MC2*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
 
-    N = 100
+    N = 300
     N_str = str(N)
     binning = "("+N_str+",0.0,1.0)"
 
@@ -100,7 +100,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
     dim = 0
     step = (X_max - X_min) / N
     for i in range(N):
-        print(i, "/",N)
+        print("Category", categ, ": ", i, "/", N, end='\r')
         a = X_min + i * step
         for j in range(N):
             b = X_min + j * step
