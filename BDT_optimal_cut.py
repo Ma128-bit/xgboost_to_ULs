@@ -66,7 +66,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
     signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
     bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
 
-    N = 300
+    N = 100
     N_str = str(N)
     binning = "("+N_str+",0.0,1.0)"
 
@@ -225,7 +225,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         bkg = weight+bkg
         
         # bdt score distribution
-        binning = (500, 0.0, 1.0)
+        binning = (100, 0.0, 1.0)
         t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
         h_test_bkg = gDirectory.Get("h_test_bkg").Clone("h_test_bkg")
         h_test_bkg2 = gDirectory.Get("h_test_bkg").Clone("h_test_bkg2")
@@ -244,8 +244,8 @@ def BDT_optimal_cut_v3(inputfile, year):
         X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
         X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
 
-        X_min = 0.8
-        X_max = 1.0
+        #X_min = 0.8
+        #X_max = 1.0
 
         # Compute cut and make colz plot
         cut_value = Get_BDT_cut_3D(cat_label[k], year, file_name)
