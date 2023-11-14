@@ -150,6 +150,9 @@ def Get_BDT_cut_3D(categ, year, file_name):
     print(f"nbinx={nbinx}, nbiny={nbiny}, nbinz={nbinz}")
     print("h3.GetMaximumBin(nbinx, nbiny, nbinz)")
     h3.GetMaximumBin(nbinx, nbiny, nbinz)
+    nbinx = nbinx.value
+    nbiny = nbiny.value
+    nbinz = nbinz.value
     print(f"nbinx={nbinx}, nbiny={nbiny}, nbinz={nbinz}")
 
     bcx = h3.GetXaxis().GetBinCenter(nbinx)
