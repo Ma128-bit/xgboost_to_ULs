@@ -41,7 +41,7 @@ def bdt_KS_plot(config, fold_index, categories, year):
     t = f.Get(out_tree_name)
     print("Opened input file:", file_name)
 
-    outputdir = pos_dir_xgboost + output_path +"/" + date+ "/" + "KS_plots"
+    outputdir = pos_dir_xgboost + output_path + date + "KS_plots/"
     
     if not os.path.exists(outputdir):
         subprocess.call("mkdir -p %s" % outputdir, shell=True)
@@ -177,7 +177,7 @@ def bdt_KS_plot(config, fold_index, categories, year):
         text_KS2.SetNDC(True)
         text_KS2.Draw("same")
 
-        c3.SaveAs(outputdir +"/" + cat_label[i] + "_KS_plot.png")
+        c3.SaveAs(outputdir + cat_label[i] + "_KS_plot.png")
 
 def to_string_with_precision(a_value, n=6):
     return f"{a_value:.{n}f}"
@@ -193,17 +193,32 @@ def bdt_taumass_plot(config, categories, year):
     out_tree_name = json_file['out_tree_name']
     index_branch = json_file['index_branch']
     Y_column = json_file['Y_column']
-    pos_dir_xgboost = json_file['data_path']
+    pos_dir_xgboost = config.split(output_path)[0]
     weight = json_file['weight_column']
+
+    if not output_path.endswith("/"):
+        output_path += "/"
+
+    if not pos_dir_xgboost.endswith("/"):
+        pos_dir_xgboost += "/"
+
+    if not date.endswith("/"):
+        date += "/"
+
+    if date.startswith("/"):
+        date = date[1:]
+
+     if output_path.startswith("/"):
+        output_path = output_path[1:]
     
     kfold_s = str(kfold)
-    file_name = pos_dir_xgboost + output_path +"/" + date+ "/" + inputfile +"_minitree.root"
+    file_name = pos_dir_xgboost + output_path + date + inputfile +"_minitree.root"
     f = ROOT.TFile(file_name, "READ")
     t = f.Get(out_tree_name)
     print("Opened input file:", file_name)
 
 
-    outputdir = pos_dir_xgboost + output_path +"/" + date+ "/" + "Mass_plots"
+    outputdir = pos_dir_xgboost + output_path + date" + "Mass_plots/"
     
     if not os.path.exists(outputdir):
         subprocess.call("mkdir -p %s" % outputdir, shell=True)
@@ -324,7 +339,7 @@ def bdt_taumass_plot(config, categories, year):
             else:
                 hratio[j].Draw("lepSame")
 
-        c1ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_signal_ratio.png")
+        c1ratio.SaveAs(outputdir + category + "_" + varname + "correlation_signal_ratio.png")
 
 
         c2 = ROOT.TCanvas("c2", year + " data SB " + category, 150, 10, 800, 800)
@@ -362,7 +377,7 @@ def bdt_taumass_plot(config, categories, year):
         ROOT.gPad.Modified()
         c2.SetLogy()
         #c2.Update()
-        c2.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg.png")
+        c2.SaveAs(outputdir + category + "_" + varname + "correlation_bkg.png")
         
         c2ratio = ROOT.TCanvas("c2ratio", year + " " + signal_label_all + " " + category, 150, 10, 800, 300)
         ROOT.gStyle.SetOptTitle(0)
@@ -380,7 +395,7 @@ def bdt_taumass_plot(config, categories, year):
                 hratio2[j].Draw("same lep")
 
         #c2ratio.Update()
-        c2ratio.SaveAs(outputdir + "/" + category + "_" + varname + "correlation_bkg_ratio.png")
+        c2ratio.SaveAs(outputdir + category + "_" + varname + "correlation_bkg_ratio.png")
         
 
 if __name__ == "__main__":
