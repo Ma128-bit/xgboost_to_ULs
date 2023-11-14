@@ -3,6 +3,7 @@ import math
 import ctypes
 from parameters import *
 from ROOT import *
+import argparse
 
 class BDTcut3d:
     def __init__(self, a, b, c):
@@ -25,7 +26,7 @@ def log_significance(S, B):
     return significance
 
 def Get_BDT_cut_3D(categ, year, file_name):
-    t = TChain("OutputTree")
+    t = TChain(out_tree_name)
     t.Add(file_name)
     print(f"Opened input file: {file_name}")
 
@@ -61,8 +62,8 @@ def Get_BDT_cut_3D(categ, year, file_name):
     elif categ == "C":
         phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
-    signal = f"weight_MC2*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
-    bkg = f"weight_MC2*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
+    signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
+    bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
 
     N = 300
     N_str = str(N)
@@ -194,7 +195,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         file_name = workdir + "/" + inputfile
 
         # Open input files
-        t = TChain("OutputTree")
+        t = TChain(out_tree_name)
         t.Add(file_name)
         print("Opened input file: {}".format(file_name))
 
@@ -216,9 +217,12 @@ def BDT_optimal_cut_v3(inputfile, year):
             phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
         c = str(k)
-        signal = "weight_MC2*(isMC>0 && isMC<4 && category=={} && {})".format(c, phiveto)
-        bkg = "weight_MC2*(isMC==0 && category=={} && ({}) && {})".format(c, isSB, phiveto)
+        signal = "*(isMC>0 && isMC<4 && category=={} && {})".format(c, phiveto)
+        bkg = "*(isMC==0 && category=={} && ({}) && {})".format(c, isSB, phiveto)
 
+        signal = weight+signal
+        bkg = weight+bkg
+        
         # bdt score distribution
         binning = (500, 0.0, 1.0)
         t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
@@ -310,6 +314,35 @@ def BDT_optimal_cut_v3(inputfile, year):
     log.close()
     print("Exiting ROOT")
 
-# Example usage:
-year="2022"
-BDT_optimal_cut_v3(inputfile, year)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="")
+    parser.add_argument("--config", type=str, help="Path to the copy of the JSON configuration file")
+    with open(config, 'r') as file:
+        json_file = json.load(file)
+    output_path = json_file['output_path']
+    date = json_file['date']
+    inputfile = json_file['Name']
+    out_tree_name = json_file['out_tree_name']
+    pos_dir_xgboost = config.split(output_path)[0]
+    weight = json_file['weight_column']
+
+    if not output_path.endswith("/"):
+        output_path += "/"
+
+    if not pos_dir_xgboost.endswith("/"):
+        pos_dir_xgboost += "/"
+
+    if not date.endswith("/"):
+        date += "/"
+
+    if date.startswith("/"):
+        date = date[1:]
+
+     if output_path.startswith("/"):
+        output_path = output_path[1:]
+    
+    inputfile = inputfile +"_minitree.root"
+    workdir = pos_dir_xgboost + output_path + date
+
+    year="2022"
+    BDT_optimal_cut_v3(inputfile, year)
