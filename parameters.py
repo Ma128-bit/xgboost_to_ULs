@@ -1,8 +1,6 @@
-# config.py
-
-workdir = "/eos/user/m/mbuonsan/Tau3mu_2023/Macro_BDT/AMS/"
+workdir = "/lustrehome/mbuonsante/Tau_3mu/xgboost/CMSSW_13_0_13/src/xgboost/results/BDT/20231111-232226"
 cat_label = ["A", "B", "C"]
-inputfile = "t3mminitree_xgb_2023_120523.root"
+inputfile = "Run2022_minitree.root"
 
 # Coefficienti per la normalizzazione del segnale
 Dplus_correction_2017 = 1.05
