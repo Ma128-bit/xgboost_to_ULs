@@ -17,11 +17,26 @@ def bdt_KS_plot(config, fold_index, categories, year):
     out_tree_name = json_file['out_tree_name']
     index_branch = json_file['index_branch']
     Y_column = json_file['Y_column']
-    pos_dir_xgboost = json_file['data_path']
+    pos_dir_xgboost = config.split(output_path)[0]
     weight = json_file['weight_column']
+
+    if not output_path.endswith("/"):
+        output_path += "/"
+
+    if not pos_dir_xgboost.endswith("/"):
+        pos_dir_xgboost += "/"
+
+    if not date.endswith("/"):
+        date += "/"
+
+    if date.startswith("/"):
+        date = date[1:]
+
+     if output_path.startswith("/"):
+        output_path = output_path[1:]
     
     kfold_s = str(kfold)
-    file_name = pos_dir_xgboost + output_path +"/" + date+ "/" + inputfile +"_minitree.root"
+    file_name = pos_dir_xgboost + output_path + date+ inputfile +"_minitree.root"
     f = ROOT.TFile(file_name, "READ")
     t = f.Get(out_tree_name)
     print("Opened input file:", file_name)
