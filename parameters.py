@@ -1,6 +1,4 @@
-workdir = "/lustrehome/mbuonsante/Tau_3mu/xgboost/CMSSW_13_0_13/src/xgboost/results/BDT/20231111-232226"
 cat_label = ["A", "B", "C"]
-inputfile = "Run2022_minitree.root"
 
 # Coefficienti per la normalizzazione del segnale
 Dplus_correction_2017 = 1.05
