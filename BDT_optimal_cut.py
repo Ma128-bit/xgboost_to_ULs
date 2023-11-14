@@ -301,8 +301,6 @@ def BDT_optimal_cut_v3(inputfile, year):
     print("Exiting ROOT")
 
 # Example usage:
-file_name = "your_input_file.root"
-categ = "A"
-year = "2023"
-cut_value = Get_BDT_cut_3D(categ, year, file_name)
+year="2022"
+BDT_optimal_cut_v3(inputfile, year)
 print(f"BDT cut values: {cut_value.a}, {cut_value.b}, {cut_value.c}")
