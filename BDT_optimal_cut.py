@@ -1,5 +1,6 @@
 import ROOT
 import math
+from parameters import *
 from ROOT import *
 
 class BDTcut3d:
@@ -59,8 +60,8 @@ def Get_BDT_cut_3D(categ, year, file_name):
     elif categ == "C":
         phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
-    signal = f"weight_MC*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
-    bkg = f"weight*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
+    signal = f"weight_MC2*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
+    bkg = f"weight_MC2*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
 
     N = 500
     binning = "(500,0.0,1.0)"
@@ -141,6 +142,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
                     h3.SetBinContent(i, j, k, S)
                     dim += 1
 
+    #Taking absolute maximum of the combined significance
     nbinx, nbiny, nbinz = ROOT.Long(), ROOT.Long(), ROOT.Long()
     print("h3.GetMaximumBin(nbinx, nbiny, nbinz)")
     h3.GetMaximumBin(nbinx, nbiny, nbinz)
@@ -154,15 +156,149 @@ def Get_BDT_cut_3D(categ, year, file_name):
     S_max = h3.GetBinContent(h3.GetMaximumBin())
     print(f"S_max={S_max}")
 
+    #Computing cut efficiency on signal
     N_S_12 = TH1_integral(h_test_signal, bcz, X_max)
     N_S_tot = TH1_integral(h_test_signal, X_min, X_max)
     print(f"Signal events kept by BDT {N_S_12} over {N_S_tot} ratio: {N_S_12/N_S_tot}")
 
+    #Computing cut efficiency on backgroup
     N_B_12 = TH1_integral(h_test_bkg, bcz, X_max)
     N_B_tot = TH1_integral(h_test_bkg, X_min, X_max)
     print(f"Background events kept by BDT {N_B_12} over {N_B_tot} ratio: {N_B_12/N_B_tot}")
 
     return BDTcut3d(bcx, bcy, bcz)
+
+from ROOT import *
+from array import array
+
+def BDT_optimal_cut_v3(inputfile, year):
+    ncat = len(cat_label)
+    outputfile = inputfile.replace(".root", "") + "_" + year + "_BDT.txt"
+
+    log = open(workdir + "/" + outputfile, "w")
+
+    for k in range(ncat):
+        log.write("category {}\n".format(cat_label[k]))
+        print("category {}".format(cat_label[k]))
+
+        file_name = workdir + "/" + inputfile
+
+        # Open input files
+        t = TChain("OutputTree")
+        t.Add(file_name)
+        print("Opened input file: {}".format(file_name))
+
+        isSB = ""
+        reversedphiveto = ""
+        phiveto = ""
+
+        if k == 0:
+            isSB = cutB_A
+            reversedphiveto = "((dimu_OS1<1.044 && dimu_OS1>0.994) || (dimu_OS2<1.044 && dimu_OS2>0.994))"
+            phiveto = "(!(dimu_OS1<1.044 && dimu_OS1>0.994) && !(dimu_OS2<1.044 && dimu_OS2>0.994))"
+        elif k == 1:
+            isSB = cutB_B
+            reversedphiveto = "((dimu_OS1<1.053 && dimu_OS1>0.985) || (dimu_OS2<1.053 && dimu_OS2>0.985))"
+            phiveto = "(!(dimu_OS1<1.053 && dimu_OS1>0.985) && !(dimu_OS2<1.053 && dimu_OS2>0.985))"
+        elif k == 2:
+            isSB = cutB_C
+            reversedphiveto = "((dimu_OS1<1.064 && dimu_OS1>0.974) || (dimu_OS2<1.064 && dimu_OS2>0.974))"
+            phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
+
+        c = str(k)
+        signal = "weight_MC*(isMC>0 && isMC<4 && category=={} && {})".format(c, phiveto)
+        bkg = "weight*(isMC==0 && category=={} && ({}) && {})".format(c, isSB, phiveto)
+
+        # bdt score distribution
+        binning = (500, 0.0, 1.0)
+        t.Draw("bdt_cv>>h_test_bkg" + binning, bkg)
+        h_test_bkg = gDirectory.Get("h_test_bkg").Clone("h_test_bkg")
+        h_test_bkg2 = gDirectory.Get("h_test_bkg").Clone("h_test_bkg2")
+        t.Draw("bdt_cv>>h_test_signal" + binning, signal)
+        h_test_signal = gDirectory.Get("h_test_signal").Clone("h_test_signal")
+        h_test_signal2 = gDirectory.Get("h_test_signal").Clone("h_test_signal2")
+
+        h_test_signal.SetDirectory(0)
+        h_test_bkg.SetDirectory(0)
+        h_test_signal2.SetDirectory(0)
+        h_test_bkg2.SetDirectory(0)
+
+        h_test_bkg.SetLineColor(kBlack);
+        h_test_signal.SetLineColor(kRed);
+
+        X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
+        X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
+
+        X_min = 0.8
+        X_max = 1.0
+
+        # Compute cut and make colz plot
+        cut_value = Get_BDT_cut_3D(cat_label[k], year, file_name)
+        log.write("{},{},{}\n".format(cut_value.a, cut_value.b, cut_value.c))
+
+        c1 = TCanvas("c1", "c1", 150, 10, 800, 800)
+        h_test_bkg.Draw("HISTE")
+        h_test_signal.Draw("same HISTE")
+        c1.Update()
+        l = TLine()
+        l.DrawLine(cut_value.a, 0, cut_value.a, 0.1)
+        l.DrawLine(cut_value.b, 0, cut_value.b, 0.1)
+        l.DrawLine(cut_value.c, 0, cut_value.c, 0.1)
+
+        leg = TLegend(0.35, 0.75, 0.65, 0.9)
+        leg.AddEntry(h_test_signal, "{}_signal".format(cat_label[k]), "f")
+        leg.AddEntry(h_test_bkg, "{}_bkg".format(cat_label[k]), "f")
+        leg.Draw()
+        c1.Update()
+        c1.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_normBDT_newnorm.png")
+
+        # Drawing BDT score from scratch without signal normalization
+        c2 = TCanvas("c2", "c2", 150, 10, 800, 800)
+        gStyle.SetOptStat(0)
+        gStyle.SetOptTitle(0)
+        h_test_signal2.GetXaxis().SetRangeUser(X_min, X_max)
+        h_test_bkg2.GetXaxis().SetRangeUser(X_min, X_max)
+        h_test_bkg2.SetLineColor(kBlack)
+        h_test_signal2.SetLineColor(kRed)
+        h_test_signal2.SetLineWidth(2)
+        h_test_bkg2.SetLineWidth(2)
+        h_test_bkg2.GetXaxis().SetTitle("BDT score")
+        h_test_signal2.Scale(1 / h_test_signal2.Integral())
+        h_test_bkg2.Scale(1 / h_test_bkg2.Integral())
+        h_test_signal2.Rebin(4)
+        h_test_bkg2.Rebin(4)
+
+        Y_max = 0.3
+
+        h_test_bkg2.Draw("HISTE")
+        h_test_bkg2.GetYaxis().SetRangeUser(1E-5, Y_max)
+        h_test_bkg2.GetXaxis().SetRangeUser(X_min, X_max)
+        h_test_signal2.Draw("same HISTE")
+        c2.Update()
+        l.DrawLine(cut_value.a, 1E-5, cut_value.a, Y_max)
+        l.DrawLine(cut_value.b, 1E-5, cut_value.b, Y_max)
+        l.DrawLine(cut_value.c, 1E-5, cut_value.c, Y_max)
+        ta = TLatex(cut_value.a, 1E-5, "a")
+        ta.Draw()
+        tb = TLatex(cut_value.b, 1E-5, "b")
+        tb.Draw()
+        tc = TLatex(cut_value.c, 1E-5, "c")
+        tc.Draw()
+
+        leg2 = TLegend(0.35, 0.75, 0.65, 0.9)
+        leg2.AddEntry(h_test_signal2, "{} {} - signal".format(year, cat_label[k]), "f")
+        leg2.AddEntry(h_test_bkg2, "{} {} - bkg".format(year, cat_label[k]), "f")
+        leg2.Draw()
+        c2.Update()
+        c2.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
+
+        # Same plot in log scale
+        c2.SetLogy()
+        c2.Update()
+        c2.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
+
+    log.close()
+    print("Exiting ROOT")
 
 # Example usage:
 file_name = "your_input_file.root"
