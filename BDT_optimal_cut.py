@@ -206,8 +206,8 @@ def BDT_optimal_cut_v3(inputfile, year):
             phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
         c = str(k)
-        signal = "weight_MC*(isMC>0 && isMC<4 && category=={} && {})".format(c, phiveto)
-        bkg = "weight*(isMC==0 && category=={} && ({}) && {})".format(c, isSB, phiveto)
+        signal = "weight_MC2*(isMC>0 && isMC<4 && category=={} && {})".format(c, phiveto)
+        bkg = "weight_MC2*(isMC==0 && category=={} && ({}) && {})".format(c, isSB, phiveto)
 
         # bdt score distribution
         binning = (500, 0.0, 1.0)
