@@ -338,7 +338,7 @@ if __name__ == "__main__":
     if date.startswith("/"):
         date = date[1:]
 
-     if output_path.startswith("/"):
+    if output_path.startswith("/"):
         output_path = output_path[1:]
     
     inputfile = inputfile +"_minitree.root"
