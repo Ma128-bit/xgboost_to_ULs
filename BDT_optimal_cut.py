@@ -317,6 +317,9 @@ def BDT_optimal_cut_v3(inputfile, year):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("--config", type=str, help="Path to the copy of the JSON configuration file")
+    rgs = parser.parse_args()
+    config = args.config
+    
     with open(config, 'r') as file:
         json_file = json.load(file)
     output_path = json_file['output_path']
