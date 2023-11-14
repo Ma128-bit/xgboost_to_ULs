@@ -1,5 +1,6 @@
 import ROOT
 import math
+from ROOT import *
 
 class BDTcut3d:
     def __init__(self, a, b, c):
@@ -22,7 +23,7 @@ def log_significance(S, B):
     return significance
 
 def Get_BDT_cut_3D(categ, year, file_name):
-    t = ROOT.TChain("OutputTree")
+    t = TChain("OutputTree")
     t.Add(file_name)
     print(f"Opened input file: {file_name}")
 
@@ -65,18 +66,18 @@ def Get_BDT_cut_3D(categ, year, file_name):
     binning = "(500,0.0,1.0)"
 
     t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
-    h_test_bkg = ROOT.gDirectory.Get("h_test_bkg")
-    h_test_bkg2 = ROOT.gDirectory.Get("h_test_bkg")
+    h_test_bkg = gDirectory.Get("h_test_bkg")
+    h_test_bkg2 = gDirectory.Get("h_test_bkg")
     t.Draw(f"bdt_cv>>h_test_signal{binning}", signal)
-    h_test_signal = ROOT.gDirectory.Get("h_test_signal")
-    h_test_signal2 = ROOT.gDirectory.Get("h_test_signal")
+    h_test_signal = gDirectory.Get("h_test_signal")
+    h_test_signal2 = gDirectory.Get("h_test_signal")
 
     h_test_signal.SetDirectory(0)
     h_test_bkg.SetDirectory(0)
     h_test_signal2.SetDirectory(0)
     h_test_bkg2.SetDirectory(0)
 
-    h3 = ROOT.TH3F("h3", "test", N, 0.0, 1.0, N, 0.0, 1.0, N, 0.0, 1.0)
+    h3 = TH3F("h3", "test", N, 0.0, 1.0, N, 0.0, 1.0, N, 0.0, 1.0)
     a, b, c = 0, 0, 0
     N_s_1, N_b_1, N_s_2, N_b_2, N_s_3, N_b_3, S1, S2, S3, S = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
@@ -136,7 +137,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
                     S1 = log_significance(N_s_1, N_b_1)
                     S2 = log_significance(N_s_2, N_b_2)
                     S3 = log_significance(N_s_3, N_b_3)
-                    S = math.sqrt(S1*S1 + S2*S2 + S3*S3)
+                    S = math.sqrt(S1 * S1 + S2 * S2 + S3 * S3)
                     h3.SetBinContent(i, j, k, S)
                     dim += 1
 
@@ -163,11 +164,9 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     return BDTcut3d(bcx, bcy, bcz)
 
-
 # Example usage:
 file_name = "your_input_file.root"
 categ = "A"
 year = "2023"
 cut_value = Get_BDT_cut_3D(categ, year, file_name)
 print(f"BDT cut values: {cut_value.a}, {cut_value.b}, {cut_value.c}")
-
