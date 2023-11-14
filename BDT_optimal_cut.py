@@ -211,10 +211,10 @@ def BDT_optimal_cut_v3(inputfile, year):
 
         # bdt score distribution
         binning = (500, 0.0, 1.0)
-        t.Draw("bdt_cv>>h_test_bkg" + binning, bkg)
+        t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
         h_test_bkg = gDirectory.Get("h_test_bkg").Clone("h_test_bkg")
         h_test_bkg2 = gDirectory.Get("h_test_bkg").Clone("h_test_bkg2")
-        t.Draw("bdt_cv>>h_test_signal" + binning, signal)
+        t.Draw(f"bdt_cv>>h_test_signal{binning}", signal)
         h_test_signal = gDirectory.Get("h_test_signal").Clone("h_test_signal")
         h_test_signal2 = gDirectory.Get("h_test_signal").Clone("h_test_signal2")
 
