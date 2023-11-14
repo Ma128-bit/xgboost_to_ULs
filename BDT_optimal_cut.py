@@ -283,7 +283,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         h_test_signal2.Rebin(4)
         h_test_bkg2.Rebin(4)
 
-        Y_max = h_test_signal2.GetYaxis().GetYmax()
+        Y_max = h_test_signal2.GetYaxis().GetXmax()
 
         h_test_bkg2.Draw("HISTE")
         h_test_bkg2.GetYaxis().SetRangeUser(1E-3, Y_max)
