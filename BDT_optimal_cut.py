@@ -99,6 +99,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
     dim = 0
     step = (X_max - X_min) / N
     for i in range(N):
+        print(i, "/",N)
         a = X_min + i * step
         for j in range(N):
             b = X_min + j * step
