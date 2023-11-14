@@ -303,4 +303,3 @@ def BDT_optimal_cut_v3(inputfile, year):
 # Example usage:
 year="2022"
 BDT_optimal_cut_v3(inputfile, year)
-print(f"BDT cut values: {cut_value.a}, {cut_value.b}, {cut_value.c}")
