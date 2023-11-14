@@ -32,7 +32,7 @@ def bdt_KS_plot(config, fold_index, categories, year):
     if date.startswith("/"):
         date = date[1:]
 
-     if output_path.startswith("/"):
+    if output_path.startswith("/"):
         output_path = output_path[1:]
     
     kfold_s = str(kfold)
