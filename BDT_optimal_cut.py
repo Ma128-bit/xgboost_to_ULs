@@ -63,8 +63,9 @@ def Get_BDT_cut_3D(categ, year, file_name):
     signal = f"weight_MC2*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
     bkg = f"weight_MC2*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
 
-    N = 500
-    binning = "(500,0.0,1.0)"
+    N = 100
+    N_str = str(N)
+    binning = "("+N_str+",0.0,1.0)"
 
     t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
     h_test_bkg = gDirectory.Get("h_test_bkg")
