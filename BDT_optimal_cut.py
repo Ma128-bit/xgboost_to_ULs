@@ -146,9 +146,12 @@ def Get_BDT_cut_3D(categ, year, file_name):
                     dim += 1
 
     #Taking absolute maximum of the combined significance
-    nbinx, nbiny, nbinz = int(), int(), int()
+    results = [0, 0, 0]
     print("h3.GetMaximumBin(nbinx, nbiny, nbinz)")
-    h3.GetMaximumBin(nbinx, nbiny, nbinz)
+    h3.GetMaximumBin(*results)
+    nbinx = results[0]
+    nbiny = results[1]
+    nbinz = results[2]
     print(f"nbinx={nbinx}, nbiny={nbiny}, nbinz={nbinz}")
 
     bcx = h3.GetXaxis().GetBinCenter(nbinx)
