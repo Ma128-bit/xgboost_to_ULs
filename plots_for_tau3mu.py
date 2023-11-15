@@ -29,11 +29,11 @@ def bdt_KS_plot(config, fold_index, categories, year):
     if not date.endswith("/"):
         date += "/"
 
-    if date.startswith("/"):
-        date = date[1:]
-        
     if output_path.startswith("/"):
         output_path = output_path[1:]
+
+    if date.startswith("/"):
+        date = date[1:]
     
     kfold_s = str(kfold)
     file_name = pos_dir_xgboost + output_path + date+ inputfile +"_minitree.root"
