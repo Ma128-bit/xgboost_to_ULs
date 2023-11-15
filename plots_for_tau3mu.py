@@ -218,7 +218,7 @@ def bdt_taumass_plot(config, categories, year):
     print("Opened input file:", file_name)
 
 
-    outputdir = pos_dir_xgboost + output_path + date" + "Mass_plots/"
+    outputdir = pos_dir_xgboost + output_path + date + "Mass_plots/"
     
     if not os.path.exists(outputdir):
         subprocess.call("mkdir -p %s" % outputdir, shell=True)
