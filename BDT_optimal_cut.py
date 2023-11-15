@@ -187,8 +187,11 @@ def BDT_optimal_cut_v3(inputfile, year):
     ncat = len(cat_label)
     outputfile = inputfile.replace(".root", "") + "_" + year + "_BDT.txt"
 
-    log = open(workdir + "/" + outputfile, "w")
+    outputfile2 = "config_" + date_copy + "_" + year +".txt"
 
+    log = open(workdir + outputfile, "w")
+
+    cuts = []
     for k in range(ncat):
         log.write("category {}\n".format(cat_label[k]))
         print("category {}".format(cat_label[k]))
@@ -249,6 +252,7 @@ def BDT_optimal_cut_v3(inputfile, year):
 
         # Compute cut and make colz plot
         cut_value = Get_BDT_cut_3D(cat_label[k], year, file_name)
+        cuts.append(cut_value)
         log.write("{},{},{}\n".format(cut_value.a, cut_value.b, cut_value.c))
 
         c1 = TCanvas("c1", "c1", 150, 10, 800, 800)
@@ -313,6 +317,14 @@ def BDT_optimal_cut_v3(inputfile, year):
         c2.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
 
     log.close()
+
+    log2 = open(workdir + outputfile2, "w")
+    log2.write("{},tripletMass,bdt_cv,category,isMC,{},dimu_OS1,dimu_OS2\n".format(out_tree_name, weight))
+    log2.write("A1,B1,C1,A2,B2,C2,A3,B3,C3\n")
+    log2.write("{},{},{}".format(cuts[0].a, cuts[1].a, cuts[2].a))
+    log2.write("{},{},{}".format(cuts[0].b, cuts[1].b, cuts[2].b))
+    log2.write("{},{},{}\n".format(cuts[0].c, cuts[1].c, cuts[2].c))
+    log2.close()
     print("Exiting ROOT")
 
 if __name__ == "__main__":
@@ -325,6 +337,7 @@ if __name__ == "__main__":
         json_file = json.load(file)
     output_path = json_file['output_path']
     date = json_file['date']
+    date_copy = json_file['date']
     inputfile = json_file['Name']
     out_tree_name = json_file['out_tree_name']
     pos_dir_xgboost = config.split(output_path)[0]
