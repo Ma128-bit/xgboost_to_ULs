@@ -185,7 +185,7 @@ from array import array
 
 def BDT_optimal_cut_v3(inputfile, year):
     ncat = len(cat_label)
-    outputfile = inputfile.replace(".root", "") + "_" + year + "_BDT.txt"
+    outputfile = inputfile_copy + "_" + year + "_BDT.txt"
 
     outputfile2 = "config_" + date_copy + "_" + year +".txt"
 
@@ -196,7 +196,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         log.write("category {}\n".format(cat_label[k]))
         print("category {}".format(cat_label[k]))
 
-        file_name = workdir + "/" + inputfile
+        file_name = workdir + inputfile
 
         # Open input files
         t = TChain(out_tree_name)
@@ -269,7 +269,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         leg.AddEntry(h_test_bkg, "{}_bkg".format(cat_label[k]), "f")
         leg.Draw()
         c1.Update()
-        c1.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_normBDT_newnorm.png")
+        c1.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_normBDT_newnorm.png")
 
         # Drawing BDT score from scratch without signal normalization
         c2 = TCanvas("c2", "c2", 150, 10, 800, 800)
@@ -309,20 +309,20 @@ def BDT_optimal_cut_v3(inputfile, year):
         leg2.AddEntry(h_test_bkg2, "{} {} - bkg".format(year, cat_label[k]), "f")
         leg2.Draw()
         c2.Update()
-        c2.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
+        c2.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
 
         # Same plot in log scale
         c2.SetLogy()
         c2.Update()
-        c2.SaveAs(workdir + "/" + outputfile + "_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
+        c2.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
 
     log.close()
 
     log2 = open(workdir + outputfile2, "w")
     log2.write("{},tripletMass,bdt_cv,category,isMC,{},dimu_OS1,dimu_OS2\n".format(out_tree_name, weight))
     log2.write("A1,B1,C1,A2,B2,C2,A3,B3,C3\n")
-    log2.write("{},{},{}".format(cuts[0].a, cuts[1].a, cuts[2].a))
-    log2.write("{},{},{}".format(cuts[0].b, cuts[1].b, cuts[2].b))
+    log2.write("{},{},{},".format(cuts[0].a, cuts[1].a, cuts[2].a))
+    log2.write("{},{},{},".format(cuts[0].b, cuts[1].b, cuts[2].b))
     log2.write("{},{},{}\n".format(cuts[0].c, cuts[1].c, cuts[2].c))
     log2.close()
     print("Exiting ROOT")
@@ -339,6 +339,7 @@ if __name__ == "__main__":
     date = json_file['date']
     date_copy = json_file['date']
     inputfile = json_file['Name']
+    inputfile_copy = json_file['Name']
     out_tree_name = json_file['out_tree_name']
     pos_dir_xgboost = config.split(output_path)[0]
     weight = json_file['weight_column']
