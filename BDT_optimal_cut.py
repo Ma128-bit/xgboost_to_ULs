@@ -47,6 +47,8 @@ def Get_BDT_cut_3D(categ, year, file_name):
     elif categ == "C":
         isSB = cutB_C
 
+    omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
+    
     reversedphiveto = ""
     if categ == "A":
         reversedphiveto = "((dimu_OS1<1.044 && dimu_OS1>0.994) || (dimu_OS2<1.044 && dimu_OS2>0.994))"
@@ -63,8 +65,8 @@ def Get_BDT_cut_3D(categ, year, file_name):
     elif categ == "C":
         phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
-    signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat} && {phiveto})"
-    bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}) && {phiveto})"
+    signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat} && {phiveto} && {omega_veto})"
+    bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}) && {phiveto} && {omega_veto})"
 
     N = 100
     N_str = str(N)
@@ -206,6 +208,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         isSB = ""
         reversedphiveto = ""
         phiveto = ""
+        omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
 
         if k == 0:
             isSB = cutB_A
@@ -221,8 +224,8 @@ def BDT_optimal_cut_v3(inputfile, year):
             phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
         c = str(k)
-        signal = "*(isMC>0 && isMC<4 && category=={} && {})".format(c, phiveto)
-        bkg = "*(isMC==0 && category=={} && ({}) && {})".format(c, isSB, phiveto)
+        signal = "*(isMC>0 && isMC<4 && category=={} && {} && {})".format(c, phiveto, omega_veto)
+        bkg = "*(isMC==0 && category=={} && ({}) && {} && {})".format(c, isSB, phiveto, omega_veto)
 
         signal = weight+signal
         bkg = weight+bkg
