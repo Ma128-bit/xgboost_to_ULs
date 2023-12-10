@@ -228,7 +228,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         bkg = weight+bkg
         
         # bdt score distribution
-        binning = "(100, 0.0, 1.0)"
+        binning = "(40, 0.0, 1.0)"
         t.Draw(f"bdt_cv>>h_test_bkg"+binning, bkg)
         h_test_bkg = gDirectory.Get("h_test_bkg").Clone("h_test_bkg")
         t.Draw(f"bdt_cv>>h_test_signal"+binning, signal)
@@ -270,8 +270,8 @@ def BDT_optimal_cut_v3(inputfile, year):
         h_test_bkg.GetXaxis().SetTitle("BDT score")
         h_test_signal.Scale(1 / h_test_signal.Integral())
         h_test_bkg.Scale(1 / h_test_bkg.Integral())
-        h_test_signal.Rebin(2)
-        h_test_bkg.Rebin(2)
+        #h_test_signal.Rebin(2)
+        #h_test_bkg.Rebin(2)
 
         Y_max = 1.2 * h_test_signal.GetMaximum()
 
