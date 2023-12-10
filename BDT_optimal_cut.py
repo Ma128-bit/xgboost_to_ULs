@@ -74,15 +74,15 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
     h_test_bkg = gDirectory.Get("h_test_bkg")
-    h_test_bkg2 = gDirectory.Get("h_test_bkg")
+    h_test_bkg = gDirectory.Get("h_test_bkg")
     t.Draw(f"bdt_cv>>h_test_signal{binning}", signal)
     h_test_signal = gDirectory.Get("h_test_signal")
-    h_test_signal2 = gDirectory.Get("h_test_signal")
+    h_test_signal = gDirectory.Get("h_test_signal")
 
     h_test_signal.SetDirectory(0)
     h_test_bkg.SetDirectory(0)
-    h_test_signal2.SetDirectory(0)
-    h_test_bkg2.SetDirectory(0)
+    h_test_signal.SetDirectory(0)
+    h_test_bkg.SetDirectory(0)
 
     h3 = TH3F("h3", "test", N, 0.0, 1.0, N, 0.0, 1.0, N, 0.0, 1.0)
     a, b, c = 0, 0, 0
@@ -151,13 +151,10 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     #Taking absolute maximum of the combined significance
     nbinx, nbiny, nbinz = ctypes.c_int(), ctypes.c_int(), ctypes.c_int()
-    print(f"nbinx={nbinx}, nbiny={nbiny}, nbinz={nbinz}")
-    print("h3.GetMaximumBin(nbinx, nbiny, nbinz)")
     h3.GetMaximumBin(nbinx, nbiny, nbinz)
     nbinx = nbinx.value
     nbiny = nbiny.value
     nbinz = nbinz.value
-    print(f"nbinx={nbinx}, nbiny={nbiny}, nbinz={nbinz}")
 
     bcx = h3.GetXaxis().GetBinCenter(nbinx)
     bcx = round(bcx, 4)
@@ -234,21 +231,14 @@ def BDT_optimal_cut_v3(inputfile, year):
         binning = (100, 0.0, 1.0)
         t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
         h_test_bkg = gDirectory.Get("h_test_bkg").Clone("h_test_bkg")
-        h_test_bkg2 = gDirectory.Get("h_test_bkg").Clone("h_test_bkg2")
         t.Draw(f"bdt_cv>>h_test_signal{binning}", signal)
         h_test_signal = gDirectory.Get("h_test_signal").Clone("h_test_signal")
-        h_test_signal2 = gDirectory.Get("h_test_signal").Clone("h_test_signal2")
 
         h_test_signal.SetDirectory(0)
         h_test_bkg.SetDirectory(0)
-        h_test_signal2.SetDirectory(0)
-        h_test_bkg2.SetDirectory(0)
         
-        h_test_bkg.SetLineColor(kBlack)
-        h_test_signal.SetLineColor(kRed)
-
-        X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
-        X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
+        X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_bkg.GetXaxis().GetXmin())
+        X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_bkg.GetXaxis().GetXmax())
 
         #X_min = 0.8
         #X_max = 1.0
@@ -258,56 +248,42 @@ def BDT_optimal_cut_v3(inputfile, year):
         cuts.append(cut_value)
         log.write("{},{},{}\n".format(cut_value.a, cut_value.b, cut_value.c))
 
-        c1 = TCanvas("c1", "c1", 150, 10, 960, 540)
-        h_test_bkg.Draw("HISTE")
-        h_test_signal.Draw("same HISTE")
-        c1.Update()
         l = TLine()
         l.SetLineStyle(2)
         l.SetLineColor(2)
-        l.DrawLine(cut_value.a, 0, cut_value.a, 0.1)
-        l.DrawLine(cut_value.b, 0, cut_value.b, 0.1)
-        l.DrawLine(cut_value.c, 0, cut_value.c, 0.1)
-
-        leg = TLegend(0.35, 0.75, 0.65, 0.9)
-        leg.AddEntry(h_test_signal, "{}_signal".format(cat_label[k]), "f")
-        leg.AddEntry(h_test_bkg, "{}_bkg".format(cat_label[k]), "f")
-        leg.Draw()
-        c1.Update()
-        c1.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_normBDT_newnorm.png")
-
+        
         # Drawing BDT score from scratch without signal normalization
         c2 = TCanvas("c2", "c2", 150, 10, 960, 540)
         gStyle.SetOptStat(0)
         gStyle.SetOptTitle(0)
-        h_test_signal2.GetXaxis().SetRangeUser(X_min, X_max)
-        h_test_bkg2.GetXaxis().SetRangeUser(X_min, X_max)
-        h_test_bkg2.SetLineColor(62);
-        h_test_bkg2.SetFillColor(62);
-        h_test_bkg2.SetFillStyle(3345);
-        h_test_signal2.SetLineColor(207);
-        h_test_signal2.SetFillColor(207);
-        h_test_signal2.SetFillStyle(3354);
+        h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
+        h_test_bkg.GetXaxis().SetRangeUser(X_min, X_max)
+        h_test_bkg.SetLineColor(62);
+        h_test_bkg.SetFillColor(62);
+        h_test_bkg.SetFillStyle(3345);
+        h_test_signal.SetLineColor(207);
+        h_test_signal.SetFillColor(207);
+        h_test_signal.SetFillStyle(3354);
         
-        h_test_signal2.SetLineWidth(2)
-        h_test_bkg2.SetLineWidth(2)
-        h_test_bkg2.GetXaxis().SetTitle("BDT score")
-        h_test_signal2.Scale(1 / h_test_signal2.Integral())
-        h_test_bkg2.Scale(1 / h_test_bkg2.Integral())
-        h_test_signal2.Rebin(4)
-        h_test_bkg2.Rebin(4)
+        h_test_signal.SetLineWidth(2)
+        h_test_bkg.SetLineWidth(2)
+        h_test_bkg.GetXaxis().SetTitle("BDT score")
+        h_test_signal.Scale(1 / h_test_signal.Integral())
+        h_test_bkg.Scale(1 / h_test_bkg.Integral())
+        h_test_signal.Rebin(4)
+        h_test_bkg.Rebin(4)
 
-        Y_max = h_test_signal2.GetYaxis().GetXmax()
+        Y_max = h_test_signal.GetYaxis().GetXmax()
 
-        h_test_bkg2.Draw("HISTE")
-        h_test_bkg2.GetYaxis().SetRangeUser(1E-3, Y_max)
-        h_test_bkg2.GetXaxis().SetRangeUser(X_min, X_max)
-        h_test_signal2.Draw("same HISTE")
+        h_test_bkg.Draw("HISTE")
+        h_test_bkg.GetYaxis().SetRangeUser(1E-3, Y_max)
+        h_test_bkg.GetXaxis().SetRangeUser(X_min, X_max)
+        h_test_signal.Draw("same HISTE")
         c2.Update()
         l.DrawLine(cut_value.a, 1E-3, cut_value.a, Y_max)
         l.DrawLine(cut_value.b, 1E-3, cut_value.b, Y_max)
         l.DrawLine(cut_value.c, 1E-3, cut_value.c, Y_max)
-        ta = TLatex(cut_value.a, Y_max, "a")
+        ta = TLatex(cut_value.a, 1E-3, "a")
         ta.Draw()
         tb = TLatex(cut_value.b, 1E-3, "b")
         tb.Draw()
@@ -315,8 +291,8 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc.Draw()
 
         leg2 = TLegend(0.1, 0.75, 0.4, 0.9)
-        leg2.AddEntry(h_test_signal2, "{} {} - signal".format(year, cat_label[k]), "f")
-        leg2.AddEntry(h_test_bkg2, "{} {} - bkg".format(year, cat_label[k]), "f")
+        leg2.AddEntry(h_test_signal, "{} {} - signal".format(year, cat_label[k]), "f")
+        leg2.AddEntry(h_test_bkg, "{} {} - bkg".format(year, cat_label[k]), "f")
         leg2.Draw()
         c2.Update()
         c2.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
