@@ -263,6 +263,8 @@ def BDT_optimal_cut_v3(inputfile, year):
         h_test_signal.Draw("same HISTE")
         c1.Update()
         l = TLine()
+        l.SetLineStyle(2)
+        l.SetLineColor(2)
         l.DrawLine(cut_value.a, 0, cut_value.a, 0.1)
         l.DrawLine(cut_value.b, 0, cut_value.b, 0.1)
         l.DrawLine(cut_value.c, 0, cut_value.c, 0.1)
@@ -282,6 +284,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         h_test_bkg2.GetXaxis().SetRangeUser(X_min, X_max)
         h_test_bkg2.SetLineColor(62);
         h_test_bkg2.SetFillColor(62);
+        h_test_bkg2.SetFillStyle(3345);
         h_test_signal2.SetLineColor(207);
         h_test_signal2.SetFillColor(207);
         h_test_signal2.SetFillStyle(3354);
