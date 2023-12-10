@@ -231,7 +231,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         binning = "(100, 0.0, 1.0)"
         t.Draw(f"bdt_cv>>h_test_bkg"+binning, bkg)
         h_test_bkg = gDirectory.Get("h_test_bkg").Clone("h_test_bkg")
-        t.Draw(f"bdt_cv>>h_test_signal"+binning,, signal)
+        t.Draw(f"bdt_cv>>h_test_signal"+binning, signal)
         h_test_signal = gDirectory.Get("h_test_signal").Clone("h_test_signal")
 
         h_test_signal.SetDirectory(0)
