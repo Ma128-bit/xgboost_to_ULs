@@ -244,8 +244,11 @@ def BDT_optimal_cut_v3(inputfile, year):
         h_test_signal2.SetDirectory(0)
         h_test_bkg2.SetDirectory(0)
 
-        h_test_bkg.SetLineColor(kBlack);
-        h_test_signal.SetLineColor(kRed);
+        h_test_bkg.SetLineColor(62);
+        h_test_bkg.SetFillColor(62);
+        h_test_signal.SetLineColor(207);
+        h_test_signal.SetFillColor(207);
+        h_test_signal.SetFillStyle(3354);
 
         X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
         X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
