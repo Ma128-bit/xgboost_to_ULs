@@ -270,8 +270,8 @@ def BDT_optimal_cut_v3(inputfile, year):
         h_test_bkg.GetXaxis().SetTitle("BDT score")
         h_test_signal.Scale(1 / h_test_signal.Integral())
         h_test_bkg.Scale(1 / h_test_bkg.Integral())
-        h_test_signal.Rebin(4)
-        h_test_bkg.Rebin(4)
+        h_test_signal.Rebin(2)
+        h_test_bkg.Rebin(2)
 
         Y_max = h_test_signal.GetYaxis().GetXmax()
 
