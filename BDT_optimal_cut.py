@@ -322,7 +322,7 @@ def BDT_optimal_cut_v3(inputfile, year):
     log.close()
 
     log2 = open(workdir + outputfile2, "w")
-    log2.write("{},tripletMass,bdt_cv,category,isMC,weight_MC,dimu_OS1,dimu_OS2\n".format(out_tree_name))
+    log2.write("{},tripletMass,bdt_cv,category,isMC,combine_weight,dimu_OS1,dimu_OS2\n".format(out_tree_name))
     log2.write("A1,B1,C1,A2,B2,C2,A3,B3,C3\n")
     log2.write("{},{},{},".format(cuts[0].a, cuts[1].a, cuts[2].a))
     log2.write("{},{},{},".format(cuts[0].b, cuts[1].b, cuts[2].b))
@@ -345,7 +345,8 @@ if __name__ == "__main__":
     inputfile_copy = json_file['Name']
     out_tree_name = json_file['out_tree_name']
     pos_dir_xgboost = config.split(output_path)[0]
-    weight = json_file['weight_column']
+    #weight = json_file['weight_column']
+    weight = "combine_weight"
 
     if not output_path.endswith("/"):
         output_path += "/"
