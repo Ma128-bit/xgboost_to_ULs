@@ -261,7 +261,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         cuts.append(cut_value)
         log.write("{},{},{}\n".format(cut_value.a, cut_value.b, cut_value.c))
 
-        c1 = TCanvas("c1", "c1", 150, 10, 800, 800)
+        c1 = TCanvas("c1", "c1", 150, 10, 1920, 1080)
         h_test_bkg.Draw("HISTE")
         h_test_signal.Draw("same HISTE")
         c1.Update()
@@ -278,7 +278,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         c1.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_normBDT_newnorm.png")
 
         # Drawing BDT score from scratch without signal normalization
-        c2 = TCanvas("c2", "c2", 150, 10, 800, 800)
+        c2 = TCanvas("c2", "c2", 150, 10, 1920, 1080)
         gStyle.SetOptStat(0)
         gStyle.SetOptTitle(0)
         h_test_signal2.GetXaxis().SetRangeUser(X_min, X_max)
