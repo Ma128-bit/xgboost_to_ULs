@@ -328,8 +328,8 @@ if __name__ == "__main__":
     inputfile_copy = json_file['Name']
     out_tree_name = json_file['out_tree_name']
     pos_dir_xgboost = config.split(output_path)[0]
-    weight = json_file['weight_column']
-    #weight = "combine_weight"
+    #weight = json_file['weight_column']
+    weight = "combine_weight"
 
     if not output_path.endswith("/"):
         output_path += "/"
