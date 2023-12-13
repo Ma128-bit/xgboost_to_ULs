@@ -97,6 +97,8 @@ def Get_BDT_cut_3D(categ, year, file_name):
         bkg_scale = 4. * 25. / (380.)
     print(f"bkg_scale = {bkg_scale}")
 
+    bkg_scale = 1
+    
     X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
     X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
     h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
@@ -291,9 +293,9 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc = TLatex(cut_value.c, 1E-3, "c")
         tc.Draw()
 
-        Ltext = ROOT.TLatex(0.5, 0.8, "#bf{#it{CMS Preliminary}}")
+        Ltext = ROOT.TLatex(0.5, 0.85, "#bf{#it{CMS Preliminary}}")
         Ltext.SetTextFont(42);
-        Ltext2 = ROOT.TLatex(0.5, 0.75, year+" category "+ cat_label[k])
+        Ltext2 = ROOT.TLatex(0.5, 0.79, year+" category "+ cat_label[k])
         Ltext2.SetTextFont(42);
         Ltext2.SetTextSize(0.04);
         Ltext.SetNDC()
@@ -324,7 +326,6 @@ def BDT_optimal_cut_v3(inputfile, year):
     log2.write("{},{},{},".format(cuts[0].b, cuts[1].b, cuts[2].b))
     log2.write("{},{},{}\n".format(cuts[0].c, cuts[1].c, cuts[2].c))
     log2.close()
-    print("Exiting ROOT")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
