@@ -250,7 +250,7 @@ def BDT_optimal_cut_v3(inputfile, year):
 
         l = TLine()
         l.SetLineStyle(2)
-        l.SetLineColor(2)
+        l.SetLineColor(1)
         
         # Drawing BDT score from scratch without signal normalization
         c2 = TCanvas("c2", "c2", 150, 10, 960, 540)
@@ -292,7 +292,11 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc.Draw()
 
         Ltext = ROOT.TLatex(0.5, 0.8, "CMS Preliminary")
-        Ltext2 = ROOT.TLatex(0.5, 0.7, year+" category "+ cat_label[k])
+        Ltext.SetTextFont(42);
+        Ltext.SetItalic();
+        Ltext2 = ROOT.TLatex(0.5, 0.75, year+" category "+ cat_label[k])
+        Ltext2.SetTextFont(42);
+        Ltext2.SetTextSize(0.04);
         Ltext.SetNDC()
         Ltext2.SetNDC()
         Ltext.Draw("same")
