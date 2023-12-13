@@ -97,7 +97,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
         bkg_scale = 4. * 25. / (380.)
     print(f"bkg_scale = {bkg_scale}")
 
-    bkg_scale = 1
+    #bkg_scale = 1
     
     X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
     X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
