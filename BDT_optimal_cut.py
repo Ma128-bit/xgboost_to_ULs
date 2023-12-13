@@ -274,7 +274,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         #h_test_signal.Rebin(2)
         #h_test_bkg.Rebin(2)
 
-        Y_max = 1.4 * h_test_signal.GetMaximum()
+        Y_max = 1.7 * h_test_signal.GetMaximum()
 
         h_test_bkg.Draw("HISTE")
         h_test_bkg.GetYaxis().SetRangeUser(1E-3, Y_max)
@@ -291,12 +291,14 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc = TLatex(cut_value.c, 1E-3, "c")
         tc.Draw()
 
-        Ltext = ROOT.TLatex(0.11, 0.7, "#bf{CMS Preliminary}")
+        Ltext = ROOT.TLatex(0.45, Y_max*0.5, "#bf{CMS Preliminary}\n"+year" category "+ cat_label[k])
         Ltext.Draw("same")
         
         leg2 = TLegend(0.1, 0.75, 0.4, 0.9)
-        leg2.AddEntry(h_test_signal, "{} {} - signal".format(year, cat_label[k]), "f")
-        leg2.AddEntry(h_test_bkg, "{} {} - bkg".format(year, cat_label[k]), "f")
+        #leg2.AddEntry(h_test_signal, "{} {} - signal".format(year, cat_label[k]), "f")
+        #leg2.AddEntry(h_test_bkg, "{} {} - bkg".format(year, cat_label[k]), "f")
+        leg2.AddEntry(h_test_signal, "MC -- signal", "f")
+        leg2.AddEntry(h_test_bkg, "Data sidebands -- bkg", "f")
         leg2.Draw()
         c2.Update()
         c2.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
