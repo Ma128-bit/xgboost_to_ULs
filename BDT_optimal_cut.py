@@ -258,11 +258,12 @@ def BDT_optimal_cut_v3(inputfile, year):
         gStyle.SetOptTitle(0)
         h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
         h_test_bkg.GetXaxis().SetRangeUser(X_min, X_max)
-        h_test_bkg.SetLineColor(62);
-        h_test_bkg.SetFillColor(62);
+        h_test_bkg.SetLineColor(207);
+        h_test_bkg.SetFillColor(207);
         h_test_bkg.SetFillStyle(3345);
-        h_test_signal.SetLineColor(207);
-        h_test_signal.SetFillColor(207);
+        
+        h_test_signal.SetLineColor(59);
+        h_test_signal.SetFillColor(59);
         h_test_signal.SetFillStyle(3354);
         
         h_test_signal.SetLineWidth(2)
