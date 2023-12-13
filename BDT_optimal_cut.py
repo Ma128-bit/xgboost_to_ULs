@@ -291,6 +291,9 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc = TLatex(cut_value.c, 1E-3, "c")
         tc.Draw()
 
+        Ltext = ROOT.TLatex(0.11, 0.7, "#bf{CMS Preliminary}")
+        Ltext.Draw("same")
+        
         leg2 = TLegend(0.1, 0.75, 0.4, 0.9)
         leg2.AddEntry(h_test_signal, "{} {} - signal".format(year, cat_label[k]), "f")
         leg2.AddEntry(h_test_bkg, "{} {} - bkg".format(year, cat_label[k]), "f")
