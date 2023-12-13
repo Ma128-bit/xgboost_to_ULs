@@ -291,9 +291,8 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc = TLatex(cut_value.c, 1E-3, "c")
         tc.Draw()
 
-        Ltext = ROOT.TLatex(0.5, 0.8, "CMS Preliminary")
+        Ltext = ROOT.TLatex(0.5, 0.8, "#bf{#it{CMS Preliminary}}")
         Ltext.SetTextFont(42);
-        Ltext.SetItalic();
         Ltext2 = ROOT.TLatex(0.5, 0.75, year+" category "+ cat_label[k])
         Ltext2.SetTextFont(42);
         Ltext2.SetTextSize(0.04);
