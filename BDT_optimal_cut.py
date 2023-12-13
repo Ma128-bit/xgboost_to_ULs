@@ -274,7 +274,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         #h_test_signal.Rebin(2)
         #h_test_bkg.Rebin(2)
 
-        Y_max = 1.7 * h_test_signal.GetMaximum()
+        Y_max = 3 * h_test_signal.GetMaximum()
 
         h_test_bkg.Draw("HISTE")
         h_test_bkg.GetYaxis().SetRangeUser(1E-3, Y_max)
@@ -291,9 +291,12 @@ def BDT_optimal_cut_v3(inputfile, year):
         tc = TLatex(cut_value.c, 1E-3, "c")
         tc.Draw()
 
-        Ltext = ROOT.TLatex(0.4, 0.75, "#bf{CMS Preliminary}\n"+year+" category "+ cat_label[k])
+        Ltext = ROOT.TLatex(0.5, 0.8, "CMS Preliminary")
+        Ltext2 = ROOT.TLatex(0.5, 0.7, year+" category "+ cat_label[k])
         Ltext.SetNDC()
+        Ltext2.SetNDC()
         Ltext.Draw("same")
+        Ltext2.Draw("same")
         
         leg2 = TLegend(0.1, 0.75, 0.4, 0.9)
         #leg2.AddEntry(h_test_signal, "{} {} - signal".format(year, cat_label[k]), "f")
