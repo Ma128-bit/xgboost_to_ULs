@@ -121,7 +121,7 @@ def bdt_KS_plot(config, fold_index, categories, year):
         print("Background train (test) ", h_BDT_Train_B.GetEntries(), "(", h_BDT_Test_B.GetEntries(), ")")
         print("Signal train (test) ", h_BDT_Train_S.GetEntries(), "(", h_BDT_Test_S.GetEntries(), ")")
 
-        c3 = ROOT.TCanvas("c3", year + " " + cat_label[i], 150, 10, 800, 800)
+        c3 = ROOT.TCanvas("c3", year + " " + cat_label[i], 150, 10, 800, 600)
         ROOT.gStyle.SetOptStat(0)
         leg = ROOT.TLegend(0.30, 0.70, 0.74, 0.82)
 
@@ -310,7 +310,7 @@ def bdt_taumass_plot(config, categories, year):
             leg_signal.AddEntry(hTrain_signal[j], range_, "l")
 
 
-        c1 = ROOT.TCanvas("c1", year + " " + signal_label_all + " " + category, 150, 10, 800, 800)
+        c1 = ROOT.TCanvas("c1", year + " " + signal_label_all + " " + category, 150, 10, 800, 600)
         hs_signal.Draw("hist nostack")
         
         t1 = ROOT.TPaveText(0.1, 0.9, 0.3, 1.0, year + " Signal - cat " + category)
@@ -342,7 +342,7 @@ def bdt_taumass_plot(config, categories, year):
         c1ratio.SaveAs(outputdir + category + "_" + varname + "correlation_signal_ratio.png")
 
 
-        c2 = ROOT.TCanvas("c2", year + " data SB " + category, 150, 10, 800, 800)
+        c2 = ROOT.TCanvas("c2", year + " data SB " + category, 150, 10, 800, 600)
         hs_bkg = ROOT.THStack("hs_bkg", year + " data SB " + category)
         leg_bkg = ROOT.TLegend(0.20, 0.65, 0.80, 0.9)
 
