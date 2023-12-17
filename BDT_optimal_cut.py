@@ -255,7 +255,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         l.SetLineColor(1)
         
         # Drawing BDT score from scratch without signal normalization
-        c2 = TCanvas("c2", "c2", 150, 10, 960, 540)
+        c2 = TCanvas("c2", "c2", 150, 10, 840, 540)
         gStyle.SetOptStat(0)
         gStyle.SetOptTitle(0)
         h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
