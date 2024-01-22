@@ -79,7 +79,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
     #bkg_scale = 1
 
     X_min = 0.0
-    X_min = 1.0
+    X_max = 1.0
     #X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_bkg.GetXaxis().GetXmin())
     #X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_bkg.GetXaxis().GetXmax())
     #h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
