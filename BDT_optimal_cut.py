@@ -47,26 +47,8 @@ def Get_BDT_cut_3D(categ, year, file_name):
     elif categ == "C":
         isSB = cutB_C
 
-    omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
-    
-    reversedphiveto = ""
-    if categ == "A":
-        reversedphiveto = "((dimu_OS1<1.044 && dimu_OS1>0.994) || (dimu_OS2<1.044 && dimu_OS2>0.994))"
-    elif categ == "B":
-        reversedphiveto = "((dimu_OS1<1.053 && dimu_OS1>0.985) || (dimu_OS2<1.053 && dimu_OS2>0.985))"
-    elif categ == "C":
-        reversedphiveto = "((dimu_OS1<1.064 && dimu_OS1>0.974) || (dimu_OS2<1.064 && dimu_OS2>0.974))"
-
-    phiveto = ""
-    if categ == "A":
-        phiveto = "(!(dimu_OS1<1.044 && dimu_OS1>0.994) && !(dimu_OS2<1.044 && dimu_OS2>0.994))"
-    elif categ == "B":
-        phiveto = "(!(dimu_OS1<1.053 && dimu_OS1>0.985) && !(dimu_OS2<1.053 && dimu_OS2>0.985))"
-    elif categ == "C":
-        phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
-
-    signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat} && {phiveto} && {omega_veto})"
-    bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}) && {phiveto} && {omega_veto})"
+    signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat})"
+    bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}))"
 
     N = 100
     N_str = str(N)
@@ -74,13 +56,10 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
     h_test_bkg = gDirectory.Get("h_test_bkg")
-    h_test_bkg = gDirectory.Get("h_test_bkg")
+
     t.Draw(f"bdt_cv>>h_test_signal{binning}", signal)
     h_test_signal = gDirectory.Get("h_test_signal")
-    h_test_signal = gDirectory.Get("h_test_signal")
 
-    h_test_signal.SetDirectory(0)
-    h_test_bkg.SetDirectory(0)
     h_test_signal.SetDirectory(0)
     h_test_bkg.SetDirectory(0)
 
@@ -98,10 +77,12 @@ def Get_BDT_cut_3D(categ, year, file_name):
     print(f"bkg_scale = {bkg_scale}")
 
     #bkg_scale = 1
-    
-    X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_signal.GetXaxis().GetXmin())
-    X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_signal.GetXaxis().GetXmax())
-    h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
+
+    X_min = 0.0
+    X_min = 1.0
+    #X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_bkg.GetXaxis().GetXmin())
+    #X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_bkg.GetXaxis().GetXmax())
+    #h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
 
     dim = 0
     step = (X_max - X_min) / N
@@ -205,26 +186,17 @@ def BDT_optimal_cut_v3(inputfile, year):
         print("Opened input file: {}".format(file_name))
 
         isSB = ""
-        reversedphiveto = ""
-        phiveto = ""
-        omega_veto = '(!(dimu_OS1<0.79 && dimu_OS1>0.77) && !(dimu_OS2<0.79 & dimu_OS2>0.77))'
 
         if k == 0:
             isSB = cutB_A
-            reversedphiveto = "((dimu_OS1<1.044 && dimu_OS1>0.994) || (dimu_OS2<1.044 && dimu_OS2>0.994))"
-            phiveto = "(!(dimu_OS1<1.044 && dimu_OS1>0.994) && !(dimu_OS2<1.044 && dimu_OS2>0.994))"
         elif k == 1:
             isSB = cutB_B
-            reversedphiveto = "((dimu_OS1<1.053 && dimu_OS1>0.985) || (dimu_OS2<1.053 && dimu_OS2>0.985))"
-            phiveto = "(!(dimu_OS1<1.053 && dimu_OS1>0.985) && !(dimu_OS2<1.053 && dimu_OS2>0.985))"
         elif k == 2:
             isSB = cutB_C
-            reversedphiveto = "((dimu_OS1<1.064 && dimu_OS1>0.974) || (dimu_OS2<1.064 && dimu_OS2>0.974))"
-            phiveto = "(!(dimu_OS1<1.064 && dimu_OS1>0.974) && !(dimu_OS2<1.064 && dimu_OS2>0.974))"
 
         c = str(k)
-        signal = "*(isMC>0 && isMC<4 && category=={} && {} && {})".format(c, phiveto, omega_veto)
-        bkg = "*(isMC==0 && category=={} && ({}) && {} && {})".format(c, isSB, phiveto, omega_veto)
+        signal = "*(isMC>0 && isMC<4 && category=={})".format(c)
+        bkg = "*(isMC==0 && category=={} && ({}))".format(c, isSB)
 
         signal = weight+signal
         bkg = weight+bkg
