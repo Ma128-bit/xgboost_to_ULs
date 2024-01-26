@@ -52,7 +52,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     N = 100
     N_str = str(N)
-    binning = "("+N_str+",0.0,1.0)"
+    binning = "("+N_str+",0.6,1.0)"
 
     t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
     h_test_bkg = gDirectory.Get("h_test_bkg")
@@ -63,7 +63,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
     h_test_signal.SetDirectory(0)
     h_test_bkg.SetDirectory(0)
 
-    h3 = TH3F("h3", "test", N, 0.0, 1.0, N, 0.0, 1.0, N, 0.0, 1.0)
+    h3 = TH3F("h3", "test", N, 0.6, 1.0, N, 0.6, 1.0, N, 0.6, 1.0)
     a, b, c = 0, 0, 0
     N_s_1, N_b_1, N_s_2, N_b_2, N_s_3, N_b_3, S1, S2, S3, S = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
@@ -78,7 +78,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     #bkg_scale = 1
 
-    X_min = 0.0
+    X_min = 0.6
     X_max = 1.0
     #X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_bkg.GetXaxis().GetXmin())
     #X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_bkg.GetXaxis().GetXmax())
