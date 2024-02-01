@@ -85,7 +85,7 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
     a_list = []
     b_list = []
     c_list = []
-    AMS_list=[]
+    AMS_list = []
     sig_int = TH1_integral(h_test_signal, X_min, X_max)
     bkg_int = TH1_integral(h_test_bkg, X_min, X_max)
     step = (X_max - X_min) / N
@@ -132,10 +132,10 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
                     S2 = log_significance(N_s_2, N_b_2)
                     S3 = log_significance(N_s_3, N_b_3)
                     S = math.sqrt(S1 * S1 + S2 * S2 + S3 * S3)
-                    AMS_list.appens(S)
-                    a_list.appens(a)
-                    b_list.appens(b)
-                    c_list.appens(c)
+                    AMS_list.append(S)
+                    a_list.append(a)
+                    b_list.append(b)
+                    c_list.append(c)
 
     #Taking absolute maximum of the combined significance
     
