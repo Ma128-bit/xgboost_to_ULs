@@ -51,7 +51,7 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
     signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat})"
     bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}))"
 
-    N = 300
+    N = 400
     N_str = str(N)
     binning = "("+N_str+",0.0,1.0)"
 
