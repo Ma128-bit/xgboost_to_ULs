@@ -51,7 +51,7 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
     signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat})"
     bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}))"
 
-    N = 1000
+    N = 300
     N_str = str(N)
     binning = "("+N_str+",0.0,1.0)"
 
@@ -142,11 +142,11 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
     AMS_max = max(AMS_list)
     AMS_maxID = AMS_list.index(AMS_max)
 
-    bcx = a_list[AMS_max]
+    bcx = a_list[AMS_maxID]
     bcx = round(bcx, 4)
-    bcy = b_list[AMS_max]
+    bcy = b_list[AMS_maxID]
     bcy = round(bcy, 4)
-    bcz = c_list[AMS_max]
+    bcz = c_list[AMS_maxID]
     bcz = round(bcz, 4)
     print(f"bcx={bcx} bcy={bcy} bcz={bcz}")
 
