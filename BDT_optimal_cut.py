@@ -4,6 +4,7 @@ import math
 import ctypes
 from parameters import *
 from ROOT import *
+from array import array
 import argparse
 
 class BDTcut3d:
@@ -25,6 +26,143 @@ def log_significance(S, B):
     significance = 0
     significance = math.sqrt(2 * ((S + B) * math.log(1 + S / B) - S))
     return significance
+
+def Get_BDT_cut_3D_v2(categ, year, file_name):
+    t = TChain(out_tree_name)
+    t.Add(file_name)
+    print(f"Opened input file: {file_name}")
+
+    cat = ""
+    if categ == "A":
+        cat = "0"
+    elif categ == "B":
+        cat = "1"
+    elif categ == "C":
+        cat = "2"
+
+    isSB = ""
+    if categ == "A":
+        isSB = cutB_A
+    elif categ == "B":
+        isSB = cutB_B
+    elif categ == "C":
+        isSB = cutB_C
+
+    signal = f"{weight}*(isMC>0 && isMC<4 && category=={cat})"
+    bkg = f"{weight}*(isMC==0 && category=={cat} && ({isSB}))"
+
+    N = 1000
+    N_str = str(N)
+    binning = "("+N_str+",0.0,1.0)"
+
+    t.Draw(f"bdt_cv>>h_test_bkg{binning}", bkg)
+    h_test_bkg = gDirectory.Get("h_test_bkg")
+
+    t.Draw(f"bdt_cv>>h_test_signal{binning}", signal)
+    h_test_signal = gDirectory.Get("h_test_signal")
+
+    h_test_signal.SetDirectory(0)
+    h_test_bkg.SetDirectory(0)
+
+    a, b, c = 0, 0, 0
+    N_s_1, N_b_1, N_s_2, N_b_2, N_s_3, N_b_3, S1, S2, S3, S = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+    bkg_scale = 1
+    if categ.startswith("A"):
+        bkg_scale = 4. * 12. / (380.)
+    elif categ.startswith("B"):
+        bkg_scale = 4. * 19. / (380.)
+    elif categ.startswith("C"):
+        bkg_scale = 4. * 25. / (380.)
+    print(f"bkg_scale = {bkg_scale}")
+
+    X_min = 0.0
+    X_max = 1.0
+    #X_min = min(h_test_signal.GetXaxis().GetXmin(), h_test_bkg.GetXaxis().GetXmin())
+    #X_max = max(h_test_signal.GetXaxis().GetXmax(), h_test_bkg.GetXaxis().GetXmax())
+    #h_test_signal.GetXaxis().SetRangeUser(X_min, X_max)
+
+    a_list = []
+    b_list = []
+    c_list = []
+    AMS_list=[]
+    sig_int = TH1_integral(h_test_signal, X_min, X_max)
+    bkg_int = TH1_integral(h_test_bkg, X_min, X_max)
+    step = (X_max - X_min) / N
+    for i in range(N):
+        print("Category", categ, ": ", i, "/", N, end='\r')
+        a = X_min + i * step
+        for j in range(N):
+            b = X_min + j * step
+            if a < b:
+                continue
+            for k in range(N):
+                c = X_min + k * step
+                if b < c:
+                    continue
+
+                N_s_1 = TH1_integral(h_test_signal, a, X_max)
+                N_b_1 = TH1_integral(h_test_bkg, a, X_max)
+                if N_s_1 < sig_int * 0.0001:
+                    continue
+                if N_b_1 < bkg_int * 0.0001:
+                    continue
+
+                N_s_2 = TH1_integral(h_test_signal, b, a)
+                N_b_2 = TH1_integral(h_test_bkg, b, a)
+                if N_s_2 < sig_int * 0.0001:
+                    continue
+                if N_b_2 < bkg_int * 0.0001:
+                    continue
+
+                N_s_3 = TH1_integral(h_test_signal, c, b)
+                N_b_3 = TH1_integral(h_test_bkg, c, b)
+                if N_s_3 < sig_int * 0.0001:
+                    continue
+                if N_b_3 < bkg_int * 0.0001:
+                    continue
+
+                N_b_1 = N_b_1 * bkg_scale
+                N_b_2 = N_b_2 * bkg_scale
+                N_b_3 = N_b_3 * bkg_scale
+
+                if N_b_1 > 0 and N_b_2 > 0 and N_b_3 > 0:
+                    S = 0
+                    S1 = log_significance(N_s_1, N_b_1)
+                    S2 = log_significance(N_s_2, N_b_2)
+                    S3 = log_significance(N_s_3, N_b_3)
+                    S = math.sqrt(S1 * S1 + S2 * S2 + S3 * S3)
+                    AMS_list.appens(S)
+                    a_list.appens(a)
+                    b_list.appens(b)
+                    c_list.appens(c)
+
+    #Taking absolute maximum of the combined significance
+    
+    AMS_max = max(AMS_list)
+    AMS_maxID = AMS_list.index(AMS_max)
+
+    bcx = a_list[AMS_max]
+    bcx = round(bcx, 4)
+    bcy = b_list[AMS_max]
+    bcy = round(bcy, 4)
+    bcz = c_list[AMS_max]
+    bcz = round(bcz, 4)
+    print(f"bcx={bcx} bcy={bcy} bcz={bcz}")
+
+    print(f"S_max={AMS_max}")
+
+    #Computing cut efficiency on signal
+    N_S_12 = TH1_integral(h_test_signal, bcz, X_max)
+    N_S_tot = sig_int
+    print(f"Signal events kept by BDT {N_S_12} over {N_S_tot} ratio: {N_S_12/N_S_tot}")
+
+    #Computing cut efficiency on backgroup
+    N_B_12 = TH1_integral(h_test_bkg, bcz, X_max)
+    N_B_tot = bkg_int
+    print(f"Background events kept by BDT {N_B_12} over {N_B_tot} ratio: {N_B_12/N_B_tot}")
+
+    return BDTcut3d(bcx, bcy, bcz)
 
 def Get_BDT_cut_3D(categ, year, file_name):
     t = TChain(out_tree_name)
@@ -162,8 +300,6 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
     return BDTcut3d(bcx, bcy, bcz)
 
-from ROOT import *
-from array import array
 
 def BDT_optimal_cut_v3(inputfile, year):
     ncat = len(cat_label)
@@ -218,7 +354,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         #X_max = 1.0
 
         # Compute cut and make colz plot
-        cut_value = Get_BDT_cut_3D(cat_label[k], year, file_name)
+        cut_value = Get_BDT_cut_3D_v2(cat_label[k], year, file_name)
         cuts.append(cut_value)
         log.write("{},{},{}\n".format(cut_value.a, cut_value.b, cut_value.c))
 
