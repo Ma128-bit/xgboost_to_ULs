@@ -89,14 +89,14 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
     sig_int = TH1_integral(h_test_signal, X_min, X_max)
     bkg_int = TH1_integral(h_test_bkg, X_min, X_max)
     step = (X_max - X_min) / N
-    for i in range(N):
-        print("Category", categ, ": ", i, "/", N, end='\r')
+    for i in range(N/2, N):
+        print("Category", categ, ": ", i, "/", N/2, end='\r')
         a = X_min + i * step
-        for j in range(N):
+        for j in range(N/2, N):
             b = X_min + j * step
             if a < b:
                 continue
-            for k in range(N):
+            for k in range(N/2, N):
                 c = X_min + k * step
                 if b < c:
                     continue
