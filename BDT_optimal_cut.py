@@ -90,7 +90,7 @@ def Get_BDT_cut_3D_v2(categ, year, file_name):
     bkg_int = TH1_integral(h_test_bkg, X_min, X_max)
     step = (X_max - X_min) / N
     for i in range(int(N/2), N):
-        print("Category", categ, ": ", i, "/", int(N/2), end='\r')
+        print("Category", categ, ": ", i-int(N/2), "/", int(N/2), end='\r')
         a = X_min + i * step
         for j in range(int(N/2), N):
             b = X_min + j * step
