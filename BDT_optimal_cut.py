@@ -303,7 +303,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
 def BDT_optimal_cut_v3(inputfile, year):
     ncat = len(cat_label)
-    outputfile = inputfile + "_" + year + "_BDT.txt"
+    outputfile = "_" + year + "_BDT.txt"
 
     outputfile2 = "config_" + label_out + "_" + year +".txt"
 
@@ -467,7 +467,7 @@ if __name__ == "__main__":
         output_path = output_path[1:]
     
     inputfile = "t3mminitree_"+date
-    workdir = pos_dir_xgboost + output_path + label_out + "_" + date2
+    workdir = pos_dir_xgboost + output_path + label_out + "_" + date
     print(workdir)
 
     year="2022"
