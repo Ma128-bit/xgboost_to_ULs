@@ -445,6 +445,7 @@ if __name__ == "__main__":
         json_file = json.load(file)
     output_path = json_file['output_folder']
     date = json_file['date']
+    date2 = json_file['date']
     label_out = json_file['label']
     out_tree_name = json_file['out_tree_name']
     pos_dir_xgboost = config.split(output_path)[0]
@@ -466,7 +467,8 @@ if __name__ == "__main__":
         output_path = output_path[1:]
     
     inputfile = "t3mminitree_"+date
-    workdir = pos_dir_xgboost + output_path + label_out + "_" + date
+    workdir = pos_dir_xgboost + output_path + label_out + "_" + date2
+    print(workdir)
 
     year="2022"
     BDT_optimal_cut_v3(inputfile, year)
