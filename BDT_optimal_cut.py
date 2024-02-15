@@ -303,7 +303,7 @@ def Get_BDT_cut_3D(categ, year, file_name):
 
 def BDT_optimal_cut_v3(inputfile, year):
     ncat = len(cat_label)
-    outputfile = inputfile_copy + "_" + year + "_BDT.txt"
+    outputfile = inputfile + "_" + year + "_BDT.txt"
 
     outputfile2 = "config_" + label_out + "_" + year +".txt"
 
@@ -314,7 +314,7 @@ def BDT_optimal_cut_v3(inputfile, year):
         log.write("category {}\n".format(cat_label[k]))
         print("category {}".format(cat_label[k]))
 
-        file_name = workdir + inputfile
+        file_name = workdir + inputfile + ".root"
 
         # Open input files
         t = TChain(out_tree_name)
@@ -418,12 +418,12 @@ def BDT_optimal_cut_v3(inputfile, year):
         leg2.AddEntry(h_test_bkg, "Data sidebands -- bkg", "f")
         leg2.Draw()
         c2.Update()
-        c2.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
+        c2.SaveAs(workdir + inputfile + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
 
         # Same plot in log scale
         c2.SetLogy()
         c2.Update()
-        c2.SaveAs(workdir + inputfile_copy + "_Cat_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
+        c2.SaveAs(workdir + inputfile + "_Cat_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
 
     log.close()
 
@@ -465,8 +465,7 @@ if __name__ == "__main__":
     if output_path.startswith("/"):
         output_path = output_path[1:]
     
-    inputfile = "t3mminitree_"+date+".root"
-    inputfile_copy = "t3mminitree_"+date
+    inputfile = "t3mminitree_"+date
     workdir = pos_dir_xgboost + output_path + label_out + "_" + date
 
     year="2022"
