@@ -466,7 +466,7 @@ if __name__ == "__main__":
     if output_path.startswith("/"):
         output_path = output_path[1:]
     
-    inputfile = "t3mminitree_"+date
+    inputfile = "t3mminitree_"+date2
     workdir = pos_dir_xgboost + output_path + label_out + "_" + date
     print(workdir)
 
