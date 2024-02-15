@@ -418,12 +418,12 @@ def BDT_optimal_cut_v3(inputfile, year):
         leg2.AddEntry(h_test_bkg, "Data sidebands -- bkg", "f")
         leg2.Draw()
         c2.Update()
-        c2.SaveAs(workdir + inputfile + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
+        c2.SaveAs(workdir + "_Cat_" + cat_label[k] + "_" + year + "_BDT_newnorm.png")
 
         # Same plot in log scale
         c2.SetLogy()
         c2.Update()
-        c2.SaveAs(workdir + inputfile + "_Cat_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
+        c2.SaveAs(workdir +  "_Cat_" + cat_label[k] + "_" + year + "_BDT_log_newnorm.png")
 
     log.close()
 
